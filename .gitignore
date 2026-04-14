@@ -1,5 +1,5 @@
 # Ignore Intellij folder
-
+/target
 /.idea/
 .idea/
 .idea
