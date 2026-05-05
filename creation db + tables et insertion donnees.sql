@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS Artist(
    BirthYear INT NOT NULL,
    PRIMARY KEY(IdArtist)
 );
- 
+
 CREATE TABLE IF NOT EXISTS Artwork(
    IdArtwork INT,
    Title VARCHAR(50) NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS Artwork(
    PRIMARY KEY(IdArtwork),
    FOREIGN KEY(IdArtist) REFERENCES Artist(IdArtist)
 );
- 
+
 CREATE TABLE IF NOT EXISTS Gallery(
    IdGallery INT,
    Name VARCHAR(50) NOT NULL,
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS Registerworkshop(
 
 
 -- ============================================================
---  ArtConnect – Script d'insertion des données d'exemple
+--  ArtConnect – Script d'insetion des données d'exemple
 --  Généré pour le projet TI603 – Groupe 2
 -- ============================================================
 
@@ -87,7 +87,7 @@ USE ArtConnect;
 -- ============================================================
 -- TABLE : Artist  (15 artistes)
 -- ============================================================
-INSERT INTO Artist (IdArtist, Email, Name, City, BirthYear) VALUES
+INSERT IGNORE INTO Artist (IdArtist, Email, Name, City, BirthYear) VALUES
 (1,  'sophie.martin@art.fr',          'Sophie Martin',       'Paris',        1985),
 (2,  'lucas.bernard@studio.fr',       'Lucas Bernard',       'Lyon',         1978),
 (3,  'amira.hassan@gallery.eg',       'Amira Hassan',        'Marseille',    1992),
@@ -107,7 +107,7 @@ INSERT INTO Artist (IdArtist, Email, Name, City, BirthYear) VALUES
 -- ============================================================
 -- TABLE : Gallery  (8 galeries)
 -- ============================================================
-INSERT INTO Gallery (IdGallery, Name, Rating, StreetName, City) VALUES
+INSERT IGNORE INTO Gallery (IdGallery, Name, Rating, StreetName, City) VALUES
 (1, 'Galerie Lumière',       4.80, '12 Rue de Rivoli',          'Paris'),
 (2, 'Espace Contemporain',   4.50, '34 Avenue des Arts',        'Lyon'),
 (3, 'La Friche Sud',         4.20, '7 Boulevard Michelet',      'Marseille'),
@@ -120,7 +120,7 @@ INSERT INTO Gallery (IdGallery, Name, Rating, StreetName, City) VALUES
 -- ============================================================
 -- TABLE : Artwork  (30 œuvres)
 -- ============================================================
-INSERT INTO Artwork (IdArtwork, Title, Price, Status, Type, IdArtist) VALUES
+INSERT IGNORE INTO Artwork (IdArtwork, Title, Price, Status, Type, IdArtist) VALUES
 -- Sophie Martin (peinture)
 (1,  'Reflets sur la Seine',        3500.00,  'FOR_SALE',  'Painting',      1),
 (2,  'Lumière d''Automne',          2800.00,  'SOLD',      'Painting',      1),
@@ -129,12 +129,12 @@ INSERT INTO Artwork (IdArtwork, Title, Price, Status, Type, IdArtist) VALUES
 (4,  'L''Équilibre Fragile',        8500.00,  'FOR_SALE',  'Sculpture',     2),
 (5,  'Mémoire de Pierre',          12000.00,  'SOLD',      'Sculpture',     2),
 -- Amira Hassan (mixed media)
-(6,  'Fusion Méditerranée',         1900.00,  'FOR_SALE',  'Mixed Media',   3),
-(7,  'Origines',                    2200.00,  'FOR_SALE',  'Mixed Media',   3),
+(6,  'Fusion Méditerranée',         1900.00,  'FOR_SALE',  'Photography',   3),
+(7,  'Origines',                    2200.00,  'FOR_SALE',  'Photography',   3),
 -- Kenji Tanaka (gravure / estampe)
-(8,  'Le Mont au Crépuscule',       5500.00,  'FOR_SALE',  'Printmaking',   4),
-(9,  'Vagues de Nuit',              4800.00,  'SOLD',      'Printmaking',   4),
-(10, 'Silence Japonais',            6200.00,  'FOR_SALE',  'Printmaking',   4),
+(8,  'Le Mont au Crépuscule',       5500.00,  'FOR_SALE',  'Sculpture',   4),
+(9,  'Vagues de Nuit',              4800.00,  'SOLD',      'Sculpture',   4),
+(10, 'Silence Japonais',            6200.00,  'FOR_SALE',  'Sculpture',   4),
 -- Elena Volkov (peinture)
 (11, 'Forêt Boréale',               3100.00,  'FOR_SALE',  'Painting',      5),
 (12, 'Épopée Blanche',              2700.00,  'FOR_SALE',  'Painting',      5),
@@ -149,27 +149,27 @@ INSERT INTO Artwork (IdArtwork, Title, Price, Status, Type, IdArtist) VALUES
 (18, 'Couleurs du Mexique',         3800.00,  'FOR_SALE',  'Painting',      8),
 (19, 'La Ville Invisible',          4100.00,  'FOR_SALE',  'Painting',      8),
 -- Fatima Benali (illustration numérique)
-(20, 'Géométries Berbères',         1200.00,  'FOR_SALE',  'Digital Art',   9),
-(21, 'Atlas en Couleurs',            980.00,  'FOR_SALE',  'Digital Art',   9),
+(20, 'Géométries Berbères',         1200.00,  'FOR_SALE',  'Photography',   9),
+(21, 'Atlas en Couleurs',            980.00,  'FOR_SALE',  'Photography',   9),
 -- Pierre Leroy (gravure)
-(22, 'Cathédrale de Traits',        3300.00,  'FOR_SALE',  'Printmaking',  10),
-(23, 'Les Quais',                   2600.00,  'SOLD',      'Printmaking',  10),
+(22, 'Cathédrale de Traits',        3300.00,  'FOR_SALE',  'Sculpture',  10),
+(23, 'Les Quais',                   2600.00,  'SOLD',      'Sculpture',  10),
 -- Nadia Schmidt (installation)
-(24, 'Résonance',                  15000.00,  'FOR_SALE',  'Installation', 11),
-(25, 'Transparences',              11000.00,  'SOLD',      'Installation', 11),
+(24, 'Résonance',                  15000.00,  'FOR_SALE',  'Painting', 11),
+(25, 'Transparences',              11000.00,  'SOLD',      'Painting', 11),
 -- Thomas Girard (art digital)
-(26, 'Data Flowers',                 750.00,  'FOR_SALE',  'Digital Art',  12),
-(27, 'Algorithme#7',                 900.00,  'FOR_SALE',  'Digital Art',  12),
+(26, 'Data Flowers',                 750.00,  'FOR_SALE',  'Photography',  12),
+(27, 'Algorithme#7',                 900.00,  'FOR_SALE',  'Photography',  12),
 -- Yuki Nakamura (aquarelle)
-(28, 'Jardin de Pluie',             2100.00,  'FOR_SALE',  'Watercolor',   13),
-(29, 'Sakura sur Mer',              1850.00,  'SOLD',      'Watercolor',   13),
+(28, 'Jardin de Pluie',             2100.00,  'FOR_SALE',  'Sculpture',   13),
+(29, 'Sakura sur Mer',              1850.00,  'SOLD',      'Sculpture',   13),
 -- Omar Diallo (peinture)
 (30, 'Savane Dorée',                4600.00,  'FOR_SALE',  'Painting',     14);
 
 -- ============================================================
 -- TABLE : Exhibition  (12 expositions)
 -- ============================================================
-INSERT INTO Exhibition (IdExhibition, Title, StartDate, Theme, IdGallery) VALUES
+INSERT IGNORE INTO Exhibition (IdExhibition, Title, StartDate, Theme, IdGallery) VALUES
 (1,  'Lumières de Paris',           '2025-09-15', 'Impressionnisme Urbain',       1),
 (2,  'Formes & Matières',           '2025-10-03', 'Sculpture Contemporaine',      2),
 (3,  'Méditerranée Plurielle',      '2025-11-20', 'Art Multiculturel',            3),
@@ -181,12 +181,19 @@ INSERT INTO Exhibition (IdExhibition, Title, StartDate, Theme, IdGallery) VALUES
 (9,  'Aquarelles en Liberté',       '2026-03-30', 'Aquarelle Contemporaine',      8),
 (10, 'Printemps des Sculptures',    '2026-04-05', 'Sculpture en Plein Air',       2),
 (11, 'Géométries Sensibles',        '2026-05-01', 'Art Abstrait et Géométrique',  3),
-(12, 'Regards Croisés',             '2026-06-15', 'Pluridisciplinaire',           1);
+(12, 'Regards Croisés',             '2026-06-15', 'Pluridisciplinaire',           1),
+(13, 'Noir & Lumière',              '2026-05-10', 'Photographie Noir et Blanc',   6),
+(14, 'Sculptures Vivantes',         '2026-05-13', 'Sculpture Interactive',        5),
+(15, 'Territoires Numériques',      '2026-05-18', 'Art Numérique et IA',          1),
+(16, 'Encres du Monde',             '2026-05-23', 'Calligraphie et Estampe',      7),
+(17, 'La Matière en Mouvement',     '2026-05-28', 'Art Cinétique',                2),
+(18, 'Couleurs du Vivant',          '2026-06-04', 'Peinture Naturaliste',         3),
+(19, 'Frontières Floues',           '2026-06-10', 'Art Abstrait Contemporain',    4);
 
 -- ============================================================
 -- TABLE : Workshop  (15 ateliers)
 -- ============================================================
-INSERT INTO Workshop (IdWorkshop, Title, Date_, Price, Level, IdArtist) VALUES
+INSERT IGNORE INTO Workshop (IdWorkshop, Title, Date_, Price, Level, IdArtist) VALUES
 (1,  'Initiation à l''Aquarelle',          '2025-10-05 10:00:00',  45.00,  'Beginner',     15),
 (2,  'Peinture à l''Huile – Bases',        '2025-10-18 14:00:00',  60.00,  'Beginner',      1),
 (3,  'Sculpture sur Argile',               '2025-11-08 09:30:00',  80.00,  'Intermediate',  7),
@@ -201,12 +208,25 @@ INSERT INTO Workshop (IdWorkshop, Title, Date_, Price, Level, IdArtist) VALUES
 (12, 'Peinture Murale – Techniques',       '2026-03-21 09:00:00',  85.00,  'Advanced',      8),
 (13, 'Photographie Argentique',            '2026-04-04 14:00:00',  70.00,  'Intermediate',  6),
 (14, 'Sculpture Métal Récupéré',           '2026-04-18 10:00:00', 100.00,  'Advanced',      2),
-(15, 'Illustration Numérique',             '2026-05-02 14:00:00',  60.00,  'Intermediate',  9);
+(15, 'Illustration Numérique',             '2026-05-02 14:00:00',  60.00,  'Intermediate',  9),
+(16, 'Photo Noir et Blanc',                '2026-05-10 10:00:00',  65.00, 'Beginner',       6),
+(17, 'Modelage Expressif',                 '2026-05-11 14:00:00',  85.00, 'Intermediate',   7),
+(18, 'Dessin Génératif sur Tablette',      '2026-05-14 10:00:00',  70.00, 'Intermediate',  12),
+(19, 'Encre de Chine – Initiation',        '2026-05-16 10:00:00',  50.00, 'Beginner',       4),
+(20, 'Peinture en Plein Air',              '2026-05-18 09:00:00',  55.00, 'Beginner',       1),
+(21, 'Collage et Assemblage',              '2026-05-21 14:00:00',  60.00, 'Intermediate',   3),
+(22, 'Aquarelle Portraits',                '2026-05-23 10:00:00',  75.00, 'Advanced',      15),
+(23, 'Gravure sur Linogravure',            '2026-05-25 14:00:00',  70.00, 'Intermediate',  10),
+(24, 'Introduction à l''Installation',     '2026-05-28 10:00:00', 110.00, 'Advanced',      11),
+(25, 'Peinture Abstraite Gestuelle',       '2026-05-30 14:00:00',  80.00, 'Intermediate',   5),
+(26, 'Photographie de Nature',             '2026-06-04 09:00:00',  60.00, 'Beginner',       6),
+(27, 'Illustration Botanique',             '2026-06-07 10:00:00',  65.00, 'Intermediate',   9),
+(28, 'Sculpture Céramique Avancée',        '2026-06-10 09:30:00',  95.00, 'Advanced',       2);
 
 -- ============================================================
 -- TABLE : CommunityMember  (20 membres)
 -- ============================================================
-INSERT INTO CommunityMember (IdMember, Name, Email, City) VALUES
+INSERT IGNORE INTO CommunityMember (IdMember, Name, Email, City) VALUES
 (1,  'Alice Moreau',       'alice.moreau@mail.fr',      'Paris'),
 (2,  'Baptiste Renard',    'baptiste.renard@mail.fr',   'Lyon'),
 (3,  'Camille Fontaine',   'camille.f@webmail.fr',      'Marseille'),
@@ -232,7 +252,7 @@ INSERT INTO CommunityMember (IdMember, Name, Email, City) VALUES
 -- TABLE : RegisterExhibition  (inscriptions membres → expositions)
 -- Chaque exposition a entre 3 et 8 inscrits pour varier les cas
 -- ============================================================
-INSERT INTO RegisterExhibition (IdExhibition, IdMember) VALUES
+INSERT IGNORE INTO RegisterExhibition (IdExhibition, IdMember) VALUES
 -- Expo 1 : Lumières de Paris
 (1,  1), (1,  4), (1,  9), (1, 11), (1, 15), (1, 19),
 -- Expo 2 : Formes & Matières
@@ -256,12 +276,26 @@ INSERT INTO RegisterExhibition (IdExhibition, IdMember) VALUES
 -- Expo 11 : Géométries Sensibles
 (11,  3), (11,  7), (11, 13), (11, 20),
 -- Expo 12 : Regards Croisés
-(12,  1), (12,  5), (12,  9), (12, 11), (12, 14), (12, 16), (12, 19), (12, 20);
+(12,  1), (12,  5), (12,  9), (12, 11), (12, 14), (12, 16), (12, 19), (12, 20),
+-- Expo 13 : Noir & Lumière
+(13,  4), (13,  8), (13, 13), (13, 17), (13, 19),
+-- Expo 14 : Sculptures Vivantes
+(14,  2), (14,  6), (14, 11), (14, 15),
+-- Expo 15 : Territoires Numériques
+(15,  9), (15, 12), (15, 13), (15, 20), (15,  4), (15,  1),
+-- Expo 16 : Encres du Monde
+(16, 10), (16, 14), (16, 18), (16,  3),
+-- Expo 17 : La Matière en Mouvement
+(17,  5), (17,  7), (17, 16), (17, 19), (17,  2),
+-- Expo 18 : Couleurs du Vivant
+(18,  1), (18,  3), (18, 12), (18, 15), (18, 20), (18,  8),
+-- Expo 19 : Frontières Floues
+(19,  6), (19,  9), (19, 11), (19, 14), (19, 17);
 
 -- ============================================================
 -- TABLE : Registerworkshop  (inscriptions membres → ateliers)
 -- ============================================================
-INSERT INTO Registerworkshop (IdMember, IdWorkshop) VALUES
+INSERT IGNORE INTO Registerworkshop (IdMember, IdWorkshop) VALUES
 -- Atelier 1 : Initiation Aquarelle
 (1, 1), (5, 1), (12, 1), (14, 1), (20, 1),
 -- Atelier 2 : Peinture à l'Huile Bases
@@ -291,8 +325,30 @@ INSERT INTO Registerworkshop (IdMember, IdWorkshop) VALUES
 -- Atelier 14 : Sculpture Métal
 (2, 14), (6, 14), (9, 14),
 -- Atelier 15 : Illustration Numérique
-(9, 15), (13, 15), (16, 15), (20, 15);
-
--- ============================================================
--- FIN DU SCRIPT D'INSERTION
--- ============================================================
+(9, 15), (13, 15), (16, 15), (20, 15),
+-- Atelier 16 : Photo Noir et Blanc
+(4, 16), (8, 16), (13, 16), (19, 16),
+-- Atelier 17 : Modelage Expressif
+(3, 17), (6, 17), (15, 17), (18, 17),
+-- Atelier 18 : Dessin Génératif sur Tablette
+(9, 18), (12, 18), (20, 18),
+-- Atelier 19 : Encre de Chine – Initiation
+(10, 19), (14, 19), (16, 19), (2, 19),
+-- Atelier 20 : Peinture en Plein Air
+(1, 20), (5, 20), (7, 20), (11, 20), (17, 20),
+-- Atelier 21 : Collage et Assemblage
+(3, 21), (13, 21), (18, 21),
+-- Atelier 22 : Aquarelle Portraits
+(1, 22), (12, 22), (15, 22),
+-- Atelier 23 : Gravure sur Linogravure
+(10, 23), (14, 23), (2, 23), (16, 23),
+-- Atelier 24 : Introduction à l'Installation
+(11, 24), (15, 24), (19, 24),
+-- Atelier 25 : Peinture Abstraite Gestuelle
+(5, 25), (7, 25), (20, 25), (9, 25),
+-- Atelier 26 : Photographie de Nature
+(4, 26), (8, 26), (13, 26), (17, 26), (6, 26),
+-- Atelier 27 : Illustration Botanique
+(9, 27), (12, 27), (20, 27),
+-- Atelier 28 : Sculpture Céramique Avancée
+(2, 28), (6, 28), (18, 28);
