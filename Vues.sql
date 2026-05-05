@@ -1,3 +1,5 @@
+USE ArtConnect;
+
 -- POUR LES ARTISTES
 
 -- Consulter la liste des œuvres et leur statut pour tous les artistes.

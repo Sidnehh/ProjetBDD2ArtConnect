@@ -2,8 +2,7 @@
 DROP TRIGGER trg_Prevent_Delete_Artist_With_Works;
 DELIMITER //
 CREATE TRIGGER trg_Prevent_Delete_Artist_With_Works
-BEFORE DELETE ON Artist
-FOR EACH ROW
+BEFORE DELETE ON Artist FOR EACH ROW
 BEGIN
     DECLARE nb_oeuvres INT;
     SELECT COUNT(*) INTO nb_oeuvres FROM Artwork WHERE IdArtist = OLD.IdArtist AND Status = 'FOR_SALE';
