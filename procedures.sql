@@ -2,6 +2,8 @@ USE ArtConnect;
 
 -- Inscrire un membre à un atelier
 
+DROP PROCEDURE IF EXISTS sp_Register_Member_To_Workshop;
+
 DELIMITER //
 
 CREATE PROCEDURE sp_Register_Member_To_Workshop(
@@ -46,6 +48,8 @@ DELIMITER ;
 
 
 -- Retourner le nombre exact de participants inscrits à une exposition
+
+DROP FUNCTION IF EXISTS fn_Count_Exhibition_Participants;
 
 DELIMITER //
 
