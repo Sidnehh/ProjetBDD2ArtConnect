@@ -1,8 +1,9 @@
 USE ArtConnect;
 
--- POUR LES ARTISTES
+-- --------------------------------------------------------------------------------------------------------
+-- I - VUES POUR LES ARTISTES
 
--- Consulter la liste des œuvres et leur statut pour tous les artistes.
+-- 1. Consulter la liste des œuvres et leur statut pour tous les artistes.
 -- Dans l'application, filtrer par IdArtist
 CREATE OR REPLACE VIEW view_artist_portfolio AS
 SELECT ar.IdArtist, ar.Name AS ArtistName, aw.IdArtwork, 
@@ -10,7 +11,7 @@ SELECT ar.IdArtist, ar.Name AS ArtistName, aw.IdArtwork,
 FROM Artist ar
 JOIN Artwork aw ON ar.IdArtist = aw.IdArtist;
 
--- Donne à l'artiste la liste détaillée des participants à ses ateliers.
+-- 2. Donne à l'artiste la liste détaillée des participants à ses ateliers.
 CREATE OR REPLACE VIEW view_artist_workshop_members AS
 SELECT ar.IdArtist, ar.Name AS ArtistName,
        w.Title AS WorkshopTitle, w.Date_,
@@ -20,11 +21,10 @@ JOIN Workshop w ON ar.IdArtist = w.IdArtist
 JOIN Registerworkshop rw ON w.IdWorkshop = rw.IdWorkshop
 JOIN CommunityMember cm ON rw.IdMember = cm.IdMember;
 
+-- --------------------------------------------------------------------------------------------------------
+-- II - VUES POUR LES UTILISATEURS
 
-
--- POUR LES UTILISATEURS
-
--- Récupère les workshops et exhibitions à venir.
+-- 1. Récupère les workshops et exhibitions à venir.
 CREATE OR REPLACE VIEW view_upcoming_events AS
 SELECT 
     'Exhibition' AS EventType,
@@ -49,7 +49,7 @@ JOIN Artist a ON w.IdArtist = a.IdArtist
 WHERE w.Date_ >= NOW()
 ORDER BY EventDate ASC;
 
--- Permet à un membre de voir toutes ses inscriptions.
+-- 2. Permet à un membre de voir toutes ses inscriptions.
 -- Dans l'application, filtrer par IdMember.
 CREATE OR REPLACE VIEW view_member_registrations AS
 SELECT 
@@ -77,7 +77,7 @@ JOIN Workshop w ON rw.IdWorkshop = w.IdWorkshop
 JOIN Artist a ON w.IdArtist = a.IdArtist
 ORDER BY EventDate DESC;
 
--- Montre toutes les œuvres disponibles à la vente
+-- 3. Montre toutes les œuvres disponibles à la vente
 CREATE OR REPLACE VIEW view_artworks_for_sale AS
 SELECT aw.IdArtwork, aw.Title, aw.Type, aw.Price,
        ar.Name AS ArtistName, ar.City AS ArtistCity
@@ -85,11 +85,12 @@ FROM Artwork aw
 JOIN Artist ar ON aw.IdArtist = ar.IdArtist
 WHERE aw.Status = 'FOR_SALE';
 
+-- 4. 
 
+-- --------------------------------------------------------------------------------------------------------
+-- III VUES POUR LES ORGANISATEURS
 
--- POUR LES ORGANISATEURS
-
--- Montre les emails et le nombre total d'inscriptions de chaque membre
+-- 1. Montre les emails et le nombre total d'inscriptions de chaque membre
 CREATE OR REPLACE VIEW view_admin_members AS
 SELECT cm.IdMember, cm.Name, cm.Email, cm.City,
        COUNT(rw.IdWorkshop) AS NbWorkshops,
@@ -99,7 +100,7 @@ LEFT JOIN Registerworkshop rw ON cm.IdMember = rw.IdMember
 LEFT JOIN RegisterExhibition re ON cm.IdMember = re.IdMember
 GROUP BY cm.IdMember, cm.Name, cm.Email, cm.City;
 
--- Tableau de bord global par artiste (Œuvres, Workshops, Participants totaux).
+-- 2. Tableau de bord global par artiste (Œuvres, Workshops, Participants totaux).
 CREATE OR REPLACE VIEW view_activity_summary AS
 SELECT ar.Name AS ArtistName,
        COUNT(DISTINCT aw.IdArtwork) AS NbArtworks,
