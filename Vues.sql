@@ -41,8 +41,8 @@ SELECT
     'Workshop' AS EventType,
     w.Title AS EventName,
     w.Date_ AS EventDate,
-    a.Name AS Location, -- Nom de l'artiste comme lieu
-    CONCAT('Level: ', w.Level) AS Description,
+    CONCAT(g.City ,' ', g.StreetName) AS Location,
+    CONCAT('Level: ', w.Level) AS RequiredLevel,
     w.Price AS Price
 FROM Workshop w
 JOIN Artist a ON w.IdArtist = a.IdArtist
