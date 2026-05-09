@@ -2,10 +2,19 @@ package com.project.artconnect.config;
 
 /**
  * Database configuration constants.
- * TODO: Students should update these with their own MySQL credentials.
+ * 
+ * INSTRUCTIONS:
+ * 1. Modify URL if your MySQL database is on a different host/port/name
+ * 2. Set USER and PASSWORD according to your MySQL credentials
+ * 3. Ensure the database "artconnect_db" exists (create it with schema scripts if needed)
  */
 public class DatabaseConfig {
-    public static final String URL = "jdbc:mysql://localhost:3306/artconnect_db";
+    // Example: jdbc:mysql://localhost:3306/artconnect_db
+    public static final String URL = "jdbc:mysql://localhost:3306/artconnect";
+    
+    // MySQL username (default: root)
     public static final String USER = "root";
-    public static final String PASSWORD = "password"; // CHANGE ME
+    
+    // MySQL password (modify according to your setup)
+    public static final String PASSWORD = "password";
 }

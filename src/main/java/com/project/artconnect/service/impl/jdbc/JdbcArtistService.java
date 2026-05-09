@@ -1,0 +1,64 @@
+package com.project.artconnect.service.impl.jdbc;
+
+import com.project.artconnect.dao.ArtistDao;
+import com.project.artconnect.model.Artist;
+import com.project.artconnect.model.Discipline;
+import com.project.artconnect.service.ArtistService;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+/**
+ * JDBC implementation of ArtistService.
+ */
+public class JdbcArtistService implements ArtistService {
+    private final ArtistDao artistDao;
+
+    public JdbcArtistService(ArtistDao artistDao) {
+        this.artistDao = artistDao;
+    }
+
+    @Override
+    public List<Artist> getAllArtists() {
+        return artistDao.findAll();
+    }
+
+    @Override
+    public Optional<Artist> getArtistByName(String name) {
+        List<Artist> artists = artistDao.findAll();
+        return artists.stream()
+                .filter(a -> a.getName().equals(name))
+                .findFirst();
+    }
+
+    @Override
+    public void createArtist(Artist artist) {
+        artistDao.save(artist);
+    }
+
+    @Override
+    public void updateArtist(Artist artist) {
+        artistDao.update(artist);
+    }
+
+    @Override
+    public void deleteArtist(String name) {
+        artistDao.delete(name);
+    }
+
+    @Override
+    public List<Discipline> getAllDisciplines() {
+        // TODO: Implement discipline retrieval if disciplines are stored in DB
+        return List.of();
+    }
+
+    @Override
+    public List<Artist> searchArtists(String query, String disciplineName, String city) {
+        List<Artist> artists = artistDao.findAll();
+        
+        return artists.stream()
+                .filter(a -> query == null || a.getName().toLowerCase().contains(query.toLowerCase()))
+                .filter(a -> city == null || city.isEmpty() || a.getCity().equalsIgnoreCase(city))
+                .collect(Collectors.toList());
+    }
+}
