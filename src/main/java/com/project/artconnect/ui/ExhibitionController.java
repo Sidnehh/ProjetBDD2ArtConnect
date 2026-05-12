@@ -45,6 +45,10 @@ public class ExhibitionController {
     private DatePicker editExhibitionStartDate;
     @FXML
     private TextField editExhibitionTheme;
+    @FXML
+    private ComboBox<Gallery> editExhibitionGallery;
+    @FXML
+    private TextField searchField;
 
     private final ExhibitionService exhibitionService = ServiceProvider.getExhibitionService();
     private final GalleryService galleryService = ServiceProvider.getGalleryService();
@@ -68,6 +72,7 @@ public class ExhibitionController {
     private void loadGalleries() {
         List<Gallery> galleries = galleryService.getAllGalleries();
         newExhibitionGallery.setItems(FXCollections.observableArrayList(galleries));
+        editExhibitionGallery.setItems(FXCollections.observableArrayList(galleries));
     }
 
     @FXML
@@ -96,6 +101,28 @@ public class ExhibitionController {
     }
 
     @FXML
+    private void handleSearch() {
+        String q = searchField.getText();
+        if (q == null || q.isBlank()) {
+            refreshData();
+            return;
+        }
+        String lower = q.toLowerCase();
+        var filtered = exhibitionService.getAllExhibitions().stream()
+                .filter(e -> (e.getTitle() != null && e.getTitle().toLowerCase().contains(lower))
+                        || (e.getTheme() != null && e.getTheme().toLowerCase().contains(lower))
+                        || (e.getGallery() != null && e.getGallery().getName() != null && e.getGallery().getName().toLowerCase().contains(lower)))
+                .toList();
+        exhibitionTable.setItems(FXCollections.observableArrayList(filtered));
+    }
+
+    @FXML
+    private void handleReset() {
+        searchField.clear();
+        refreshData();
+    }
+
+    @FXML
     private void handleUpdateExhibition() {
         if (selectedExhibition == null) {
             showAlert("Error", "Please select an exhibition from the table first.");
@@ -114,6 +141,7 @@ public class ExhibitionController {
         selectedExhibition.setTitle(title);
         selectedExhibition.setStartDate(startDate);
         selectedExhibition.setTheme(theme);
+        selectedExhibition.setGallery(editExhibitionGallery.getValue());
 
         exhibitionService.update(selectedExhibition);
         showAlert("Success", "Exhibition '" + selectedExhibition.getTitle() + "' updated successfully!");
@@ -146,6 +174,7 @@ public class ExhibitionController {
             editExhibitionTitle.setText(selectedExhibition.getTitle());
             editExhibitionStartDate.setValue(selectedExhibition.getStartDate());
             editExhibitionTheme.setText(selectedExhibition.getTheme() != null ? selectedExhibition.getTheme() : "");
+            editExhibitionGallery.setValue(selectedExhibition.getGallery());
         }
     }
 
@@ -153,6 +182,7 @@ public class ExhibitionController {
         editExhibitionTitle.clear();
         editExhibitionStartDate.setValue(null);
         editExhibitionTheme.clear();
+        editExhibitionGallery.setValue(null);
         selectedExhibition = null;
         exhibitionTable.getSelectionModel().clearSelection();
     }

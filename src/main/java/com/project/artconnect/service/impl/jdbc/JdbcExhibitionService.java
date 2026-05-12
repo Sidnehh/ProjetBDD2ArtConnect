@@ -55,13 +55,14 @@ public class JdbcExhibitionService implements ExhibitionService {
 
     @Override
     public void update(Exhibition exhibition) {
-        String sql = "UPDATE Exhibition SET Title = ?, StartDate = ?, Theme = ? WHERE Title = ?";
+        String sql = "UPDATE Exhibition SET Title = ?, StartDate = ?, Theme = ?, IdGallery = ? WHERE Title = ?";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, exhibition.getTitle());
             stmt.setDate(2, java.sql.Date.valueOf(exhibition.getStartDate()));
             stmt.setString(3, exhibition.getTheme());
-            stmt.setString(4, exhibition.getTitle());
+            stmt.setInt(4, exhibition.getGallery() != null ? exhibition.getGallery().getId() : 0);
+            stmt.setString(5, exhibition.getTitle());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error updating exhibition: " + e.getMessage(), e);

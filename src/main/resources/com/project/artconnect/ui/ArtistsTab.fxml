@@ -10,7 +10,7 @@
     </padding>
 
     <!-- Search Section -->
-    <TitledPane text="Search &amp; Filter" collapsible="true" expanded="true">
+    <TitledPane text="Search" collapsible="true" expanded="true">
         <VBox spacing="5.0" style="-fx-padding: 10;">
             <HBox spacing="10.0" alignment="CENTER_LEFT">
                 <TextField fx:id="searchField" promptText="Search artists..." HBox.hgrow="ALWAYS" />

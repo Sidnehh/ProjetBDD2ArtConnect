@@ -110,12 +110,16 @@ public class ArtistController {
             return;
         }
 
+        String name = editArtistName.getText().trim();
         String email = editArtistEmail.getText().trim();
         String city = editArtistCity.getText().trim();
         String yearStr = editArtistYear.getText().trim();
 
         try {
             Integer year = yearStr.isEmpty() ? null : Integer.parseInt(yearStr);
+            if (!name.isEmpty()) {
+                selectedArtist.setName(name);
+            }
             selectedArtist.setContactEmail(email);
             selectedArtist.setCity(city);
             selectedArtist.setBirthYear(year);

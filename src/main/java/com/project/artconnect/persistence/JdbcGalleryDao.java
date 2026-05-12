@@ -64,9 +64,11 @@ public class JdbcGalleryDao implements GalleryDao {
      */
     private Gallery mapResultSetToGallery(ResultSet rs) throws SQLException {
         Gallery gallery = new Gallery();
+        gallery.setId(rs.getInt("IdGallery"));
         gallery.setName(rs.getString("Name"));
         gallery.setRating(rs.getDouble("Rating"));
-        gallery.setAddress(rs.getString("StreetName") + ", " + rs.getString("City"));
+        gallery.setStreetName(rs.getString("StreetName"));
+        gallery.setCity(rs.getString("City"));
         return gallery;
     }
 }

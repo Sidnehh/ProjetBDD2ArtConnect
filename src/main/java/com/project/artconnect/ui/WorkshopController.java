@@ -15,6 +15,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class WorkshopController {
     @FXML
@@ -38,6 +41,8 @@ public class WorkshopController {
     @FXML
     private ComboBox<Artist> newWorkshopInstructor;
     @FXML
+    private TextField newWorkshopTime;
+    @FXML
     private TextField newWorkshopPrice;
     @FXML
     private ComboBox<String> newWorkshopLevel;
@@ -48,9 +53,15 @@ public class WorkshopController {
     @FXML
     private DatePicker editWorkshopDate;
     @FXML
+    private TextField editWorkshopTime;
+    @FXML
     private TextField editWorkshopPrice;
     @FXML
     private ComboBox<String> editWorkshopLevel;
+    @FXML
+    private ComboBox<Artist> editWorkshopInstructor;
+    @FXML
+    private TextField searchField;
 
     private final WorkshopService workshopService = ServiceProvider.getWorkshopService();
     private final ArtistService artistService = ServiceProvider.getArtistService();
@@ -79,6 +90,7 @@ public class WorkshopController {
 
     private void loadInstructors() {
         newWorkshopInstructor.setItems(FXCollections.observableArrayList(artistService.getAllArtists()));
+        editWorkshopInstructor.setItems(FXCollections.observableArrayList(artistService.getAllArtists()));
     }
 
     @FXML
@@ -86,6 +98,7 @@ public class WorkshopController {
         String title = newWorkshopTitle.getText().trim();
         LocalDate date = newWorkshopDate.getValue();
         Artist instructor = newWorkshopInstructor.getValue();
+        String timeStr = newWorkshopTime.getText().trim();
         String priceStr = newWorkshopPrice.getText().trim();
         String level = newWorkshopLevel.getValue();
 
@@ -96,7 +109,8 @@ public class WorkshopController {
 
         try {
             double price = priceStr.isEmpty() ? 0.0 : Double.parseDouble(priceStr);
-            LocalDateTime dateTime = date.atStartOfDay();
+            LocalTime time = timeStr.isEmpty() ? LocalTime.of(9,0) : LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("H:mm"));
+            LocalDateTime dateTime = LocalDateTime.of(date, time);
             Workshop workshop = new Workshop(title, dateTime, instructor, price);
             workshop.setLevel(level);
 
@@ -112,6 +126,8 @@ public class WorkshopController {
             refreshTable();
         } catch (NumberFormatException e) {
             showAlert("Validation Error", "Price must be a valid number.");
+        } catch (DateTimeParseException e) {
+            showAlert("Validation Error", "Time must be in HH:mm format.");
         }
     }
 
@@ -122,7 +138,10 @@ public class WorkshopController {
             return;
         }
 
+        String title = editWorkshopTitle.getText().trim();
         LocalDate date = editWorkshopDate.getValue();
+        String timeStr = editWorkshopTime.getText().trim();
+        Artist instructor = editWorkshopInstructor.getValue();
         String priceStr = editWorkshopPrice.getText().trim();
         String level = editWorkshopLevel.getValue();
 
@@ -133,8 +152,11 @@ public class WorkshopController {
 
         try {
             double price = priceStr.isEmpty() ? selectedWorkshop.getPrice() : Double.parseDouble(priceStr);
-            LocalDateTime dateTime = date.atStartOfDay();
+            LocalTime time = timeStr.isEmpty() ? selectedWorkshop.getDate().toLocalTime() : LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("H:mm"));
+            LocalDateTime dateTime = LocalDateTime.of(date, time);
+            if (!title.isEmpty()) selectedWorkshop.setTitle(title);
             selectedWorkshop.setDate(dateTime);
+            if (instructor != null) selectedWorkshop.setInstructor(instructor);
             selectedWorkshop.setPrice(price);
             selectedWorkshop.setLevel(level);
 
@@ -144,6 +166,8 @@ public class WorkshopController {
             clearEditFields();
         } catch (NumberFormatException e) {
             showAlert("Validation Error", "Price must be a valid number.");
+        } catch (DateTimeParseException e) {
+            showAlert("Validation Error", "Time must be in HH:mm format.");
         }
     }
 
@@ -171,8 +195,10 @@ public class WorkshopController {
         if (selectedWorkshop != null) {
             editWorkshopTitle.setText(selectedWorkshop.getTitle());
             editWorkshopDate.setValue(selectedWorkshop.getDate().toLocalDate());
+            editWorkshopTime.setText(selectedWorkshop.getDate().toLocalTime().toString());
             editWorkshopPrice.setText(String.valueOf(selectedWorkshop.getPrice()));
-            editWorkshopLevel.setValue(selectedWorkshop.getLevel() != null ? selectedWorkshop.getLevel() : "BEGINNER");
+            editWorkshopLevel.setValue(selectedWorkshop.getLevel() != null ? selectedWorkshop.getLevel() : "Beginner");
+            editWorkshopInstructor.setValue(selectedWorkshop.getInstructor());
         }
     }
 
@@ -188,6 +214,27 @@ public class WorkshopController {
     private void refreshTable() {
         workshopTable.setItems(FXCollections.observableArrayList(workshopService.getAllWorkshops()));
         clearEditFields();
+    }
+
+    @FXML
+    private void handleSearch() {
+        String q = searchField.getText();
+        if (q == null || q.isBlank()) {
+            refreshTable();
+            return;
+        }
+        String lower = q.toLowerCase();
+        var filtered = workshopService.getAllWorkshops().stream()
+                .filter(w -> (w.getTitle() != null && w.getTitle().toLowerCase().contains(lower))
+                        || (w.getInstructor() != null && w.getInstructor().getName() != null && w.getInstructor().getName().toLowerCase().contains(lower)))
+                .toList();
+        workshopTable.setItems(FXCollections.observableArrayList(filtered));
+    }
+
+    @FXML
+    private void handleReset() {
+        searchField.clear();
+        refreshTable();
     }
 
     private void startAutoRefresh() {

@@ -16,9 +16,9 @@ public class InMemoryGalleryService implements GalleryService {
     }
 
     public void initData(ArtworkService artworkService) {
-        Gallery louvre = addGallery("Louvre Art House", "Rue de Rivoli, Paris", 4.9);
-        Gallery british = addGallery("The British Gallery", "Great Russell St, London", 4.7);
-        Gallery met = addGallery("Metropolitan Hub", "1000 5th Ave, New York", 4.8);
+        Gallery louvre = addGallery("Louvre Art House", "Rue de Rivoli", "Paris", 4.9);
+        Gallery british = addGallery("The British Gallery", "Great Russell St", "London", 4.7);
+        Gallery met = addGallery("Metropolitan Hub", "1000 5th Ave", "New York", 4.8);
 
         // Add Exhibitions
         addExhibition("Renaissance Revival", LocalDate.now().minusMonths(1), louvre,
@@ -35,8 +35,8 @@ public class InMemoryGalleryService implements GalleryService {
                 artworkService.getArtworkByTitle("Water Lilies").orElse(null));
     }
 
-    private Gallery addGallery(String name, String address, double rating) {
-        Gallery g = new Gallery(name, address, rating);
+    private Gallery addGallery(String name, String street, String city, double rating) {
+        Gallery g = new Gallery(name, street, city, rating);
         galleries.put(name, g);
         return g;
     }
@@ -68,5 +68,24 @@ public class InMemoryGalleryService implements GalleryService {
         if (gallery == null)
             return Collections.emptyList();
         return gallery.getExhibitions();
+    }
+
+    @Override
+    public void createGallery(Gallery gallery) {
+        if (gallery != null && gallery.getName() != null) {
+            galleries.put(gallery.getName(), gallery);
+        }
+    }
+
+    @Override
+    public void updateGallery(Gallery gallery) {
+        if (gallery != null && gallery.getName() != null) {
+            galleries.put(gallery.getName(), gallery);
+        }
+    }
+
+    @Override
+    public void deleteGallery(String name) {
+        galleries.remove(name);
     }
 }

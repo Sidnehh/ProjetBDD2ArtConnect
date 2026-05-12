@@ -37,6 +37,9 @@ public class CommunityController {
     @FXML
     private TextField editMemberCity;
 
+    @FXML
+    private TextField searchField;
+
     private final CommunityService communityService = ServiceProvider.getCommunityService();
     private Timeline autoRefreshTimeline;
     private CommunityMember selectedMember;
@@ -71,6 +74,28 @@ public class CommunityController {
         newMemberCity.clear();
 
         showAlert("Success", "Member '" + name + "' added successfully!");
+        refreshTable();
+    }
+
+    @FXML
+    private void handleSearch() {
+        String q = searchField.getText();
+        if (q == null || q.isBlank()) {
+            refreshTable();
+            return;
+        }
+        String lower = q.toLowerCase();
+        var filtered = communityService.getAllMembers().stream()
+                .filter(m -> (m.getName() != null && m.getName().toLowerCase().contains(lower))
+                        || (m.getEmail() != null && m.getEmail().toLowerCase().contains(lower))
+                        || (m.getCity() != null && m.getCity().toLowerCase().contains(lower)))
+                .toList();
+        memberTable.setItems(FXCollections.observableArrayList(filtered));
+    }
+
+    @FXML
+    private void handleReset() {
+        searchField.clear();
         refreshTable();
     }
 

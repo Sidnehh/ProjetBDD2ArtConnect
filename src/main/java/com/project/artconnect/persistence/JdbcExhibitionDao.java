@@ -71,17 +71,19 @@ public class JdbcExhibitionDao implements ExhibitionDao {
 
     @Override
     public void update(Exhibition exhibition) {
-        String sql = "UPDATE Exhibition SET StartDate = ?, Theme = ? WHERE Title = ?";
-        
+        String sql = "UPDATE Exhibition SET Title = ?, StartDate = ?, Theme = ?, IdGallery = ? WHERE Title = ?";
+
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setDate(1, java.sql.Date.valueOf(exhibition.getStartDate()));
-            stmt.setString(2, exhibition.getTheme() != null ? exhibition.getTheme() : "");
-            stmt.setString(3, exhibition.getTitle());
-            
+
+            stmt.setString(1, exhibition.getTitle());
+            stmt.setDate(2, java.sql.Date.valueOf(exhibition.getStartDate()));
+            stmt.setString(3, exhibition.getTheme() != null ? exhibition.getTheme() : "");
+            stmt.setInt(4, exhibition.getGallery() != null ? exhibition.getGallery().getId() : 0);
+            stmt.setString(5, exhibition.getTitle());
+
             stmt.executeUpdate();
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Error updating exhibition: " + e.getMessage());
@@ -134,9 +136,11 @@ public class JdbcExhibitionDao implements ExhibitionDao {
             
             if (rs.next()) {
                 Gallery gallery = new Gallery();
+                gallery.setId(rs.getInt("IdGallery"));
                 gallery.setName(rs.getString("Name"));
                 gallery.setRating(rs.getDouble("Rating"));
-                gallery.setAddress(rs.getString("StreetName") + ", " + rs.getString("City"));
+                gallery.setStreetName(rs.getString("StreetName"));
+                gallery.setCity(rs.getString("City"));
                 rs.close();
                 return gallery;
             }

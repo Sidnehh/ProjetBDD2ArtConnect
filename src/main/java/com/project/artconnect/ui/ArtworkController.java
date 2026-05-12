@@ -54,6 +54,9 @@ public class ArtworkController {
     @FXML
     private ComboBox<Artist> editArtworkArtist;
 
+    @FXML
+    private TextField searchField;
+
     private final ArtworkService artworkService = ServiceProvider.getArtworkService();
     private final ArtistService artistService = ServiceProvider.getArtistService();
     private Timeline autoRefreshTimeline;
@@ -87,6 +90,28 @@ public class ArtworkController {
 
         refreshTable();
         startAutoRefresh();
+    }
+
+    @FXML
+    private void handleSearch() {
+        String q = searchField.getText();
+        if (q == null || q.isBlank()) {
+            refreshTable();
+            return;
+        }
+        String lower = q.toLowerCase();
+        var filtered = artworkService.getAllArtworks().stream()
+                .filter(a -> a.getTitle() != null && a.getTitle().toLowerCase().contains(lower)
+                        || (a.getArtist() != null && a.getArtist().getName() != null && a.getArtist().getName().toLowerCase().contains(lower))
+                        || (a.getType() != null && a.getType().toLowerCase().contains(lower)))
+                .toList();
+        artworkTable.setItems(FXCollections.observableArrayList(filtered));
+    }
+
+    @FXML
+    private void handleReset() {
+        searchField.clear();
+        refreshTable();
     }
 
     private void setupArtistComboBox(ComboBox<Artist> comboBox) {

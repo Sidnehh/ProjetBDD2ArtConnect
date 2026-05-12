@@ -9,6 +9,14 @@
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
 
+    <TitledPane text="Search" collapsible="true" expanded="true">
+        <HBox spacing="8.0" style="-fx-padding: 10;">
+            <TextField fx:id="searchField" promptText="Search workshops..." HBox.hgrow="ALWAYS" />
+            <Button text="Search" onAction="#handleSearch" />
+            <Button text="Reset" onAction="#handleReset" />
+        </HBox>
+    </TitledPane>
+
     <!-- Add New Workshop Section -->
     <TitledPane text="Add New Workshop" collapsible="true" expanded="false">
         <VBox spacing="8.0" style="-fx-padding: 10;">
@@ -19,6 +27,10 @@
             <HBox spacing="10.0">
                 <Label text="Date:" prefWidth="100" />
                 <DatePicker fx:id="newWorkshopDate" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Time (HH:mm):" prefWidth="100" />
+                <TextField fx:id="newWorkshopTime" promptText="09:30" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox spacing="10.0">
                 <Label text="Instructor:" prefWidth="100" />
@@ -42,11 +54,19 @@
             <Label text="Select a workshop from the table below, then modify and click Update or Delete" style="-fx-text-fill: #666;" />
             <HBox spacing="10.0">
                 <Label text="Title:" prefWidth="100" />
-                <TextField fx:id="editWorkshopTitle" promptText="Title" HBox.hgrow="ALWAYS" disable="true" />
+                <TextField fx:id="editWorkshopTitle" promptText="Title" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox spacing="10.0">
                 <Label text="Date:" prefWidth="100" />
                 <DatePicker fx:id="editWorkshopDate" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Time (HH:mm):" prefWidth="100" />
+                <TextField fx:id="editWorkshopTime" promptText="09:30" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Instructor:" prefWidth="100" />
+                <ComboBox fx:id="editWorkshopInstructor" prefWidth="200" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox spacing="10.0">
                 <Label text="Price:" prefWidth="100" />

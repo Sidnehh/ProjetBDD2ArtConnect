@@ -6,7 +6,8 @@ import java.util.List;
 public class Gallery {
     private int id;
     private String name;
-    private String address;
+    private String streetName;
+    private String city;
     private String ownerName;
     private String openingHours;
     private String contactPhone;
@@ -17,9 +18,10 @@ public class Gallery {
     public Gallery() {
     }
 
-    public Gallery(String name, String address, double rating) {
+    public Gallery(String name, String streetName, String city, double rating) {
         this.name = name;
-        this.address = address;
+        this.streetName = streetName;
+        this.city = city;
         this.rating = rating;
     }
 
@@ -39,12 +41,30 @@ public class Gallery {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public String getStreetName() {
+        return streetName;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
+     * Convenience getter returning combined address string for UI compatibility.
+     */
+    public String getAddress() {
+        if (streetName == null && city == null) return null;
+        if (streetName == null) return city;
+        if (city == null) return streetName;
+        return streetName + ", " + city;
     }
 
     public String getOwnerName() {
