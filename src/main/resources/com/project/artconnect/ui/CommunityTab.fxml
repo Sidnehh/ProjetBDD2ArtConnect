@@ -8,7 +8,68 @@
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
-    <TableView fx:id="memberTable" VBox.vgrow="ALWAYS">
+
+    <!-- Add New Member Section -->
+    <TitledPane text="Add New Community Member" collapsible="true" expanded="false">
+        <VBox spacing="8.0" style="-fx-padding: 10;">
+            <HBox spacing="10.0">
+                <Label text="Name:" prefWidth="100" />
+                <TextField fx:id="newMemberName" promptText="Member name" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Email:" prefWidth="100" />
+                <TextField fx:id="newMemberEmail" promptText="Email" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="City:" prefWidth="100" />
+                <TextField fx:id="newMemberCity" promptText="City" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Birth Year:" prefWidth="100" />
+                <Spinner fx:id="newMemberBirthYear" min="1900" max="2024" initialValue="2000" prefWidth="150" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Membership Type:" prefWidth="100" />
+                <ComboBox fx:id="newMemberType" prefWidth="200" />
+            </HBox>
+            <Button text="Add Member" onAction="#handleAddMember" style="-fx-font-size: 12; -fx-padding: 8;" />
+        </VBox>
+    </TitledPane>
+
+    <!-- Update/Delete Section -->
+    <TitledPane text="Update or Delete Community Member" collapsible="true" expanded="false">
+        <VBox spacing="8.0" style="-fx-padding: 10;">
+            <Label text="Select a member from the table below, then modify and click Update or Delete" style="-fx-text-fill: #666;" />
+            <HBox spacing="10.0">
+                <Label text="Name:" prefWidth="100" />
+                <TextField fx:id="editMemberName" promptText="Name" HBox.hgrow="ALWAYS" disable="true" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Email:" prefWidth="100" />
+                <TextField fx:id="editMemberEmail" promptText="Email" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="City:" prefWidth="100" />
+                <TextField fx:id="editMemberCity" promptText="City" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Birth Year:" prefWidth="100" />
+                <Spinner fx:id="editMemberBirthYear" min="1900" max="2024" initialValue="2000" prefWidth="150" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Membership Type:" prefWidth="100" />
+                <ComboBox fx:id="editMemberType" prefWidth="200" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Button text="Update Member" onAction="#handleUpdateMember" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #2196f3;" />
+                <Button text="Delete Member" onAction="#handleDeleteMember" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #f44336;" />
+            </HBox>
+        </VBox>
+    </TitledPane>
+
+    <!-- Members Table -->
+    <Label text="Community Members List" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+    <TableView fx:id="memberTable" VBox.vgrow="ALWAYS" onMouseClicked="#handleTableSelection">
         <columns>
             <TableColumn fx:id="nameColumn" text="Name" prefWidth="250" />
             <TableColumn fx:id="emailColumn" text="Email" prefWidth="250" />

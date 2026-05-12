@@ -4,16 +4,17 @@ import com.project.artconnect.model.Artist;
 import com.project.artconnect.model.Discipline;
 import com.project.artconnect.service.ArtistService;
 import com.project.artconnect.util.ServiceProvider;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Duration;
 
 public class ArtistController {
     @FXML
     private TextField searchField;
-    @FXML
-    private ComboBox<Discipline> disciplineFilter;
     @FXML
     private TableView<Artist> artistTable;
     @FXML
@@ -25,7 +26,29 @@ public class ArtistController {
     @FXML
     private TableColumn<Artist, Integer> yearColumn;
 
+    // Create fields
+    @FXML
+    private TextField newArtistName;
+    @FXML
+    private TextField newArtistEmail;
+    @FXML
+    private TextField newArtistCity;
+    @FXML
+    private TextField newArtistYear;
+
+    // Edit fields
+    @FXML
+    private TextField editArtistName;
+    @FXML
+    private TextField editArtistEmail;
+    @FXML
+    private TextField editArtistCity;
+    @FXML
+    private TextField editArtistYear;
+
     private final ArtistService artistService = ServiceProvider.getArtistService();
+    private Timeline autoRefreshTimeline;
+    private Artist selectedArtist;
 
     @FXML
     public void initialize() {
@@ -34,26 +57,140 @@ public class ArtistController {
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("contactEmail"));
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("birthYear"));
 
-        disciplineFilter.setItems(FXCollections.observableArrayList(artistService.getAllDisciplines()));
         refreshTable();
+        startAutoRefresh();
     }
 
     @FXML
     private void handleSearch() {
         String query = searchField.getText();
-        Discipline d = disciplineFilter.getValue();
-        String dName = (d != null) ? d.getName() : null;
-        artistTable.setItems(FXCollections.observableArrayList(artistService.searchArtists(query, dName, null)));
+        artistTable.setItems(FXCollections.observableArrayList(artistService.searchArtists(query, null, null)));
     }
 
     @FXML
     private void handleReset() {
         searchField.clear();
-        disciplineFilter.setValue(null);
         refreshTable();
+    }
+
+    @FXML
+    private void handleAddArtist() {
+        String name = newArtistName.getText().trim();
+        String email = newArtistEmail.getText().trim();
+        String city = newArtistCity.getText().trim();
+        String yearStr = newArtistYear.getText().trim();
+
+        if (name.isEmpty()) {
+            showAlert("Validation Error", "Please enter an artist name.");
+            return;
+        }
+
+        try {
+            Integer year = yearStr.isEmpty() ? null : Integer.parseInt(yearStr);
+            Artist artist = new Artist(name, "", year, email, city);
+            artistService.createArtist(artist);
+
+            // Clear form
+            newArtistName.clear();
+            newArtistEmail.clear();
+            newArtistCity.clear();
+            newArtistYear.clear();
+
+            showAlert("Success", "Artist '" + name + "' added successfully!");
+            refreshTable();
+        } catch (NumberFormatException e) {
+            showAlert("Validation Error", "Birth Year must be a valid number.");
+        }
+    }
+
+    @FXML
+    private void handleUpdateArtist() {
+        if (selectedArtist == null) {
+            showAlert("Error", "Please select an artist from the table first.");
+            return;
+        }
+
+        String email = editArtistEmail.getText().trim();
+        String city = editArtistCity.getText().trim();
+        String yearStr = editArtistYear.getText().trim();
+
+        try {
+            Integer year = yearStr.isEmpty() ? null : Integer.parseInt(yearStr);
+            selectedArtist.setContactEmail(email);
+            selectedArtist.setCity(city);
+            selectedArtist.setBirthYear(year);
+
+            artistService.updateArtist(selectedArtist);
+            showAlert("Success", "Artist '" + selectedArtist.getName() + "' updated successfully!");
+            refreshTable();
+            clearEditFields();
+        } catch (NumberFormatException e) {
+            showAlert("Validation Error", "Birth Year must be a valid number.");
+        }
+    }
+
+    @FXML
+    private void handleDeleteArtist() {
+        if (selectedArtist == null) {
+            showAlert("Error", "Please select an artist from the table first.");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirm Delete");
+        confirm.setContentText("Are you sure you want to delete '" + selectedArtist.getName() + "'?");
+        if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            artistService.deleteArtist(selectedArtist.getName());
+            showAlert("Success", "Artist '" + selectedArtist.getName() + "' deleted successfully!");
+            refreshTable();
+            clearEditFields();
+        }
+    }
+
+    @FXML
+    private void handleTableSelection() {
+        selectedArtist = artistTable.getSelectionModel().getSelectedItem();
+        if (selectedArtist != null) {
+            editArtistName.setText(selectedArtist.getName());
+            editArtistEmail.setText(selectedArtist.getContactEmail() != null ? selectedArtist.getContactEmail() : "");
+            editArtistCity.setText(selectedArtist.getCity() != null ? selectedArtist.getCity() : "");
+            editArtistYear.setText(selectedArtist.getBirthYear() != null ? selectedArtist.getBirthYear().toString() : "");
+        }
+    }
+
+    private void clearEditFields() {
+        editArtistName.clear();
+        editArtistEmail.clear();
+        editArtistCity.clear();
+        editArtistYear.clear();
+        selectedArtist = null;
+        artistTable.getSelectionModel().clearSelection();
     }
 
     private void refreshTable() {
         artistTable.setItems(FXCollections.observableArrayList(artistService.getAllArtists()));
+        clearEditFields();
+    }
+
+    private void startAutoRefresh() {
+        autoRefreshTimeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+            String query = searchField.getText();
+
+            if (query != null && !query.isBlank()) {
+                handleSearch();
+            } else {
+                refreshTable();
+            }
+        }));
+        autoRefreshTimeline.setCycleCount(Timeline.INDEFINITE);
+        autoRefreshTimeline.play();
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

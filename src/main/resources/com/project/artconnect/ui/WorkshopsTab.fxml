@@ -8,7 +8,64 @@
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
-    <TableView fx:id="workshopTable" VBox.vgrow="ALWAYS">
+
+    <!-- Add New Workshop Section -->
+    <TitledPane text="Add New Workshop" collapsible="true" expanded="false">
+        <VBox spacing="8.0" style="-fx-padding: 10;">
+            <HBox spacing="10.0">
+                <Label text="Title:" prefWidth="100" />
+                <TextField fx:id="newWorkshopTitle" promptText="Workshop title" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Date:" prefWidth="100" />
+                <DatePicker fx:id="newWorkshopDate" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Instructor:" prefWidth="100" />
+                <ComboBox fx:id="newWorkshopInstructor" prefWidth="200" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Price:" prefWidth="100" />
+                <TextField fx:id="newWorkshopPrice" promptText="Price" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Level:" prefWidth="100" />
+                <ComboBox fx:id="newWorkshopLevel" prefWidth="200" />
+            </HBox>
+            <Button text="Add Workshop" onAction="#handleAddWorkshop" style="-fx-font-size: 12; -fx-padding: 8;" />
+        </VBox>
+    </TitledPane>
+
+    <!-- Update/Delete Section -->
+    <TitledPane text="Update or Delete Workshop" collapsible="true" expanded="false">
+        <VBox spacing="8.0" style="-fx-padding: 10;">
+            <Label text="Select a workshop from the table below, then modify and click Update or Delete" style="-fx-text-fill: #666;" />
+            <HBox spacing="10.0">
+                <Label text="Title:" prefWidth="100" />
+                <TextField fx:id="editWorkshopTitle" promptText="Title" HBox.hgrow="ALWAYS" disable="true" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Date:" prefWidth="100" />
+                <DatePicker fx:id="editWorkshopDate" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Price:" prefWidth="100" />
+                <TextField fx:id="editWorkshopPrice" promptText="Price" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Level:" prefWidth="100" />
+                <ComboBox fx:id="editWorkshopLevel" prefWidth="200" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Button text="Update Workshop" onAction="#handleUpdateWorkshop" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #2196f3;" />
+                <Button text="Delete Workshop" onAction="#handleDeleteWorkshop" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #f44336;" />
+            </HBox>
+        </VBox>
+    </TitledPane>
+
+    <!-- Workshops Table -->
+    <Label text="Workshops List" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+    <TableView fx:id="workshopTable" VBox.vgrow="ALWAYS" onMouseClicked="#handleTableSelection">
         <columns>
             <TableColumn fx:id="titleColumn" text="Title" prefWidth="200" />
             <TableColumn fx:id="instructorColumn" text="Instructor" prefWidth="150" />

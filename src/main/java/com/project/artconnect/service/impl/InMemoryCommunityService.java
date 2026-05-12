@@ -54,4 +54,29 @@ public class InMemoryCommunityService implements CommunityService {
             return Collections.emptyList();
         return member.getReviews();
     }
+
+    @Override
+    public void createMember(CommunityMember member) {
+        members.put(member.getName(), member);
+    }
+
+    @Override
+    public void updateMember(CommunityMember member) {
+        if (member.getId() > 0) {
+            for (CommunityMember m : members.values()) {
+                if (m.getId() == member.getId()) {
+                    m.setEmail(member.getEmail());
+                    m.setCity(member.getCity());
+                    m.setBirthYear(member.getBirthYear());
+                    m.setMembershipType(member.getMembershipType());
+                    return;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void deleteMember(int id) {
+        members.values().removeIf(m -> m.getId() == id);
+    }
 }

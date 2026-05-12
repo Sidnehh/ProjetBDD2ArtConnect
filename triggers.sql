@@ -28,7 +28,12 @@ BEGIN
     IF NEW.Type NOT IN (
         'Painting', 
         'Sculpture', 
-        'Photography'
+        'Photography',
+        'Mixed Media',
+        'Printmaking',
+        'Digital Art',
+        'Watercolor',
+        'Installation'
     ) THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Erreur : Type d''œuvre invalide. Les types autorisés sont : Painting, Sculpture, Photography.';

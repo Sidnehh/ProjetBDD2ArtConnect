@@ -60,4 +60,19 @@ public class InMemoryWorkshopService implements WorkshopService {
             return Collections.emptyList();
         return member.getBookings();
     }
+
+    @Override
+    public void save(Workshop workshop) {
+        workshops.put(workshop.getTitle(), workshop);
+    }
+
+    @Override
+    public void update(Workshop workshop) {
+        workshops.put(workshop.getTitle(), workshop);
+    }
+
+    @Override
+    public void delete(String title) {
+        workshops.remove(title);
+    }
 }
