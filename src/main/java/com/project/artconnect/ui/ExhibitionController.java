@@ -34,8 +34,6 @@ public class ExhibitionController {
     @FXML
     private DatePicker newExhibitionStartDate;
     @FXML
-    private DatePicker newExhibitionEndDate;
-    @FXML
     private TextField newExhibitionTheme;
     @FXML
     private ComboBox<Gallery> newExhibitionGallery;
@@ -45,8 +43,6 @@ public class ExhibitionController {
     private TextField editExhibitionTitle;
     @FXML
     private DatePicker editExhibitionStartDate;
-    @FXML
-    private DatePicker editExhibitionEndDate;
     @FXML
     private TextField editExhibitionTheme;
 
@@ -78,27 +74,20 @@ public class ExhibitionController {
     private void handleAddExhibition() {
         String title = newExhibitionTitle.getText().trim();
         LocalDate startDate = newExhibitionStartDate.getValue();
-        LocalDate endDate = newExhibitionEndDate.getValue();
         String theme = newExhibitionTheme.getText().trim();
         Gallery gallery = newExhibitionGallery.getValue();
 
-        if (title.isEmpty() || startDate == null || endDate == null) {
-            showAlert("Validation Error", "Please fill in Title, Start Date, and End Date.");
+        if (title.isEmpty() || startDate == null) {
+            showAlert("Validation Error", "Please fill in Title and Start Date.");
             return;
         }
 
-        if (startDate.isAfter(endDate)) {
-            showAlert("Validation Error", "Start Date must be before End Date.");
-            return;
-        }
-
-        Exhibition exhibition = new Exhibition(title, startDate, endDate, gallery);
+        Exhibition exhibition = new Exhibition(title, startDate, gallery);
         exhibition.setTheme(theme);
         exhibitionService.save(exhibition);
 
         newExhibitionTitle.clear();
         newExhibitionStartDate.setValue(null);
-        newExhibitionEndDate.setValue(null);
         newExhibitionTheme.clear();
         newExhibitionGallery.setValue(null);
 
@@ -113,22 +102,17 @@ public class ExhibitionController {
             return;
         }
 
+        String title = editExhibitionTitle.getText().trim();
         LocalDate startDate = editExhibitionStartDate.getValue();
-        LocalDate endDate = editExhibitionEndDate.getValue();
         String theme = editExhibitionTheme.getText().trim();
 
-        if (startDate == null || endDate == null) {
-            showAlert("Validation Error", "Please fill in Start Date and End Date.");
+        if (title.isEmpty() || startDate == null) {
+            showAlert("Validation Error", "Please fill in Title and Start Date.");
             return;
         }
 
-        if (startDate.isAfter(endDate)) {
-            showAlert("Validation Error", "Start Date must be before End Date.");
-            return;
-        }
-
+        selectedExhibition.setTitle(title);
         selectedExhibition.setStartDate(startDate);
-        selectedExhibition.setEndDate(endDate);
         selectedExhibition.setTheme(theme);
 
         exhibitionService.update(selectedExhibition);
@@ -161,7 +145,6 @@ public class ExhibitionController {
         if (selectedExhibition != null) {
             editExhibitionTitle.setText(selectedExhibition.getTitle());
             editExhibitionStartDate.setValue(selectedExhibition.getStartDate());
-            editExhibitionEndDate.setValue(selectedExhibition.getEndDate());
             editExhibitionTheme.setText(selectedExhibition.getTheme() != null ? selectedExhibition.getTheme() : "");
         }
     }
@@ -169,7 +152,6 @@ public class ExhibitionController {
     private void clearEditFields() {
         editExhibitionTitle.clear();
         editExhibitionStartDate.setValue(null);
-        editExhibitionEndDate.setValue(null);
         editExhibitionTheme.clear();
         selectedExhibition = null;
         exhibitionTable.getSelectionModel().clearSelection();

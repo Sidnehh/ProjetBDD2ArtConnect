@@ -18,7 +18,11 @@
             </HBox>
             <HBox spacing="10.0">
                 <Label text="Type:" prefWidth="100" />
-                <TextField fx:id="newArtworkType" promptText="e.g. Painting, Sculpture" HBox.hgrow="ALWAYS" />
+                <ComboBox fx:id="newArtworkType" prefWidth="200" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Artist:" prefWidth="100" />
+                <ComboBox fx:id="newArtworkArtist" prefWidth="200" />
             </HBox>
             <HBox spacing="10.0">
                 <Label text="Price:" prefWidth="100" />
@@ -38,11 +42,15 @@
             <Label text="Select an artwork from the table below, then modify and click Update or Delete" style="-fx-text-fill: #666;" />
             <HBox spacing="10.0">
                 <Label text="Title:" prefWidth="100" />
-                <TextField fx:id="editArtworkTitle" promptText="Title" HBox.hgrow="ALWAYS" disable="true" />
+                <TextField fx:id="editArtworkTitle" promptText="Title" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox spacing="10.0">
                 <Label text="Type:" prefWidth="100" />
-                <TextField fx:id="editArtworkType" promptText="Type" HBox.hgrow="ALWAYS" />
+                <ComboBox fx:id="editArtworkType" prefWidth="200" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Label text="Artist:" prefWidth="100" />
+                <ComboBox fx:id="editArtworkArtist" prefWidth="200" />
             </HBox>
             <HBox spacing="10.0">
                 <Label text="Price:" prefWidth="100" />

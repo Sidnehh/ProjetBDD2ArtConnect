@@ -1,16 +1,20 @@
 package com.project.artconnect.ui;
 
 import com.project.artconnect.model.Artwork;
+import com.project.artconnect.model.Artist;
 import com.project.artconnect.service.ArtworkService;
+import com.project.artconnect.service.ArtistService;
 import com.project.artconnect.util.ServiceProvider;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 
 public class ArtworkController {
     @FXML
@@ -30,23 +34,28 @@ public class ArtworkController {
     @FXML
     private TextField newArtworkTitle;
     @FXML
-    private TextField newArtworkType;
+    private ComboBox<String> newArtworkType;
     @FXML
     private TextField newArtworkPrice;
     @FXML
     private ComboBox<String> newArtworkStatus;
+    @FXML
+    private ComboBox<Artist> newArtworkArtist;
 
     // Edit fields
     @FXML
     private TextField editArtworkTitle;
     @FXML
-    private TextField editArtworkType;
+    private ComboBox<String> editArtworkType;
     @FXML
     private TextField editArtworkPrice;
     @FXML
     private ComboBox<String> editArtworkStatus;
+    @FXML
+    private ComboBox<Artist> editArtworkArtist;
 
     private final ArtworkService artworkService = ServiceProvider.getArtworkService();
+    private final ArtistService artistService = ServiceProvider.getArtistService();
     private Timeline autoRefreshTimeline;
     private Artwork selectedArtwork;
 
@@ -60,37 +69,66 @@ public class ArtworkController {
         artistColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
                 cellData.getValue().getArtist() != null ? cellData.getValue().getArtist().getName() : "Unknown"));
 
-        // Populate status ComboBox items
-        newArtworkStatus.setItems(FXCollections.observableArrayList("FOR_SALE", "SOLD", "EXHIBITED"));
-        editArtworkStatus.setItems(FXCollections.observableArrayList("FOR_SALE", "SOLD", "EXHIBITED"));
+        // Setup type dropdown with 8 predefined artwork types
+        ObservableList<String> types = FXCollections.observableArrayList(
+            "Painting", "Sculpture", "Photography", "Mixed Media",
+            "Printmaking", "Digital Art", "Watercolor", "Installation"
+        );
+        newArtworkType.setItems(types);
+        editArtworkType.setItems(types);
+
+        // Setup status dropdown (only FOR_SALE and SOLD, no EXHIBITED)
+        newArtworkStatus.setItems(FXCollections.observableArrayList("FOR_SALE", "SOLD"));
+        editArtworkStatus.setItems(FXCollections.observableArrayList("FOR_SALE", "SOLD"));
+
+        // Setup artist dropdowns
+        setupArtistComboBox(newArtworkArtist);
+        setupArtistComboBox(editArtworkArtist);
 
         refreshTable();
         startAutoRefresh();
     }
 
+    private void setupArtistComboBox(ComboBox<Artist> comboBox) {
+        var artists = FXCollections.observableArrayList(artistService.getAllArtists());
+        comboBox.setItems(artists);
+        comboBox.setConverter(new StringConverter<Artist>() {
+            @Override
+            public String toString(Artist artist) {
+                return artist != null ? artist.getName() : "";
+            }
+            @Override
+            public Artist fromString(String string) {
+                return artists.stream().filter(a -> a.getName().equals(string)).findFirst().orElse(null);
+            }
+        });
+    }
+
     @FXML
     private void handleAddArtwork() {
         String title = newArtworkTitle.getText().trim();
-        String type = newArtworkType.getText().trim();
+        String type = newArtworkType.getValue();
         String priceStr = newArtworkPrice.getText().trim();
         String status = newArtworkStatus.getValue();
+        Artist artist = newArtworkArtist.getValue();
 
-        if (title.isEmpty() || type.isEmpty()) {
-            showAlert("Validation Error", "Please fill in Title and Type.");
+        if (title.isEmpty() || type == null || status == null || artist == null) {
+            showAlert("Validation Error", "Please fill in all fields including selecting an artist.");
             return;
         }
 
         try {
             double price = priceStr.isEmpty() ? 0.0 : Double.parseDouble(priceStr);
-            Artwork artwork = new Artwork(title, null, type, price, null);
+            Artwork artwork = new Artwork(title, null, type, price, artist);
             artwork.setStatus(status != null ? Artwork.Status.valueOf(status) : Artwork.Status.FOR_SALE);
 
             artworkService.createArtwork(artwork);
 
             newArtworkTitle.clear();
-            newArtworkType.clear();
+            newArtworkType.setValue(null);
             newArtworkPrice.clear();
             newArtworkStatus.setValue(null);
+            newArtworkArtist.setValue(null);
 
             showAlert("Success", "Artwork '" + title + "' added successfully!");
             refreshTable();
@@ -106,15 +144,24 @@ public class ArtworkController {
             return;
         }
 
-        String type = editArtworkType.getText().trim();
+        String title = editArtworkTitle.getText().trim();
+        String type = editArtworkType.getValue();
         String priceStr = editArtworkPrice.getText().trim();
         String status = editArtworkStatus.getValue();
+        Artist artist = editArtworkArtist.getValue();
+
+        if (title.isEmpty() || type == null || status == null || artist == null) {
+            showAlert("Validation Error", "Please fill in all fields including selecting an artist.");
+            return;
+        }
 
         try {
             double price = priceStr.isEmpty() ? selectedArtwork.getPrice() : Double.parseDouble(priceStr);
+            selectedArtwork.setTitle(title);
             selectedArtwork.setType(type);
             selectedArtwork.setPrice(price);
             selectedArtwork.setStatus(status != null ? Artwork.Status.valueOf(status) : Artwork.Status.FOR_SALE);
+            selectedArtwork.setArtist(artist);
 
             artworkService.updateArtwork(selectedArtwork);
             showAlert("Success", "Artwork '" + selectedArtwork.getTitle() + "' updated successfully!");
@@ -148,17 +195,19 @@ public class ArtworkController {
         selectedArtwork = artworkTable.getSelectionModel().getSelectedItem();
         if (selectedArtwork != null) {
             editArtworkTitle.setText(selectedArtwork.getTitle());
-            editArtworkType.setText(selectedArtwork.getType() != null ? selectedArtwork.getType() : "");
+            editArtworkType.setValue(selectedArtwork.getType() != null ? selectedArtwork.getType() : "");
             editArtworkPrice.setText(String.valueOf(selectedArtwork.getPrice()));
             editArtworkStatus.setValue(selectedArtwork.getStatus() != null ? selectedArtwork.getStatus().toString() : "FOR_SALE");
+            editArtworkArtist.setValue(selectedArtwork.getArtist());
         }
     }
 
     private void clearEditFields() {
         editArtworkTitle.clear();
-        editArtworkType.clear();
+        editArtworkType.setValue(null);
         editArtworkPrice.clear();
         editArtworkStatus.setValue(null);
+        editArtworkArtist.setValue(null);
         selectedArtwork = null;
         artworkTable.getSelectionModel().clearSelection();
     }

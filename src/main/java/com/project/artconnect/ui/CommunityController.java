@@ -28,10 +28,6 @@ public class CommunityController {
     private TextField newMemberEmail;
     @FXML
     private TextField newMemberCity;
-    @FXML
-    private Spinner<Integer> newMemberBirthYear;
-    @FXML
-    private ComboBox<String> newMemberType;
 
     // Edit fields
     @FXML
@@ -40,10 +36,6 @@ public class CommunityController {
     private TextField editMemberEmail;
     @FXML
     private TextField editMemberCity;
-    @FXML
-    private Spinner<Integer> editMemberBirthYear;
-    @FXML
-    private ComboBox<String> editMemberType;
 
     private final CommunityService communityService = ServiceProvider.getCommunityService();
     private Timeline autoRefreshTimeline;
@@ -55,21 +47,8 @@ public class CommunityController {
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
 
-        initializeSpinners();
-        // Populate membership type ComboBox items
-        newMemberType.setItems(FXCollections.observableArrayList("REGULAR", "PREMIUM", "VIP"));
-        editMemberType.setItems(FXCollections.observableArrayList("REGULAR", "PREMIUM", "VIP"));
-        
         refreshTable();
         startAutoRefresh();
-    }
-
-    private void initializeSpinners() {
-        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, 2024, 2000);
-        newMemberBirthYear.setValueFactory(yearFactory);
-        
-        SpinnerValueFactory<Integer> editYearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, 2024, 2000);
-        editMemberBirthYear.setValueFactory(editYearFactory);
     }
 
     @FXML
@@ -77,24 +56,19 @@ public class CommunityController {
         String name = newMemberName.getText().trim();
         String email = newMemberEmail.getText().trim();
         String city = newMemberCity.getText().trim();
-        Integer birthYear = newMemberBirthYear.getValue();
-        String memberType = newMemberType.getValue();
 
-        if (name.isEmpty() || email.isEmpty() || city.isEmpty()) {
-            showAlert("Validation Error", "Please fill in Name, Email, and City.");
+        if (name.isEmpty() || email.isEmpty()) {
+            showAlert("Validation Error", "Please fill in Name and Email.");
             return;
         }
 
-        CommunityMember member = new CommunityMember(name, email, birthYear, city);
-        member.setMembershipType(memberType != null ? memberType : "REGULAR");
+        CommunityMember member = new CommunityMember(name, email, city);
 
         communityService.createMember(member);
 
         newMemberName.clear();
         newMemberEmail.clear();
         newMemberCity.clear();
-        newMemberBirthYear.getValueFactory().setValue(2000);
-        newMemberType.setValue(null);
 
         showAlert("Success", "Member '" + name + "' added successfully!");
         refreshTable();
@@ -107,20 +81,18 @@ public class CommunityController {
             return;
         }
 
+        String name = editMemberName.getText().trim();
         String email = editMemberEmail.getText().trim();
         String city = editMemberCity.getText().trim();
-        Integer birthYear = editMemberBirthYear.getValue();
-        String memberType = editMemberType.getValue();
 
-        if (email.isEmpty() || city.isEmpty()) {
-            showAlert("Validation Error", "Please fill in Email and City.");
+        if (name.isEmpty() || email.isEmpty()) {
+            showAlert("Validation Error", "Please fill in Name and Email.");
             return;
         }
 
+        selectedMember.setName(name);
         selectedMember.setEmail(email);
         selectedMember.setCity(city);
-        selectedMember.setBirthYear(birthYear);
-        selectedMember.setMembershipType(memberType != null ? memberType : "REGULAR");
 
         communityService.updateMember(selectedMember);
         showAlert("Success", "Member '" + selectedMember.getName() + "' updated successfully!");
@@ -153,8 +125,6 @@ public class CommunityController {
             editMemberName.setText(selectedMember.getName());
             editMemberEmail.setText(selectedMember.getEmail() != null ? selectedMember.getEmail() : "");
             editMemberCity.setText(selectedMember.getCity() != null ? selectedMember.getCity() : "");
-            editMemberBirthYear.getValueFactory().setValue(selectedMember.getBirthYear());
-            editMemberType.setValue(selectedMember.getMembershipType() != null ? selectedMember.getMembershipType() : "REGULAR");
         }
     }
 
@@ -162,8 +132,6 @@ public class CommunityController {
         editMemberName.clear();
         editMemberEmail.clear();
         editMemberCity.clear();
-        editMemberBirthYear.getValueFactory().setValue(2000);
-        editMemberType.setValue(null);
         selectedMember = null;
         memberTable.getSelectionModel().clearSelection();
     }

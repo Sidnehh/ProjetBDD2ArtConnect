@@ -24,14 +24,6 @@
                 <Label text="City:" prefWidth="100" />
                 <TextField fx:id="newMemberCity" promptText="City" HBox.hgrow="ALWAYS" />
             </HBox>
-            <HBox spacing="10.0">
-                <Label text="Birth Year:" prefWidth="100" />
-                <Spinner fx:id="newMemberBirthYear" min="1900" max="2024" initialValue="2000" prefWidth="150" />
-            </HBox>
-            <HBox spacing="10.0">
-                <Label text="Membership Type:" prefWidth="100" />
-                <ComboBox fx:id="newMemberType" prefWidth="200" />
-            </HBox>
             <Button text="Add Member" onAction="#handleAddMember" style="-fx-font-size: 12; -fx-padding: 8;" />
         </VBox>
     </TitledPane>
@@ -42,7 +34,7 @@
             <Label text="Select a member from the table below, then modify and click Update or Delete" style="-fx-text-fill: #666;" />
             <HBox spacing="10.0">
                 <Label text="Name:" prefWidth="100" />
-                <TextField fx:id="editMemberName" promptText="Name" HBox.hgrow="ALWAYS" disable="true" />
+                <TextField fx:id="editMemberName" promptText="Name" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox spacing="10.0">
                 <Label text="Email:" prefWidth="100" />
@@ -51,14 +43,6 @@
             <HBox spacing="10.0">
                 <Label text="City:" prefWidth="100" />
                 <TextField fx:id="editMemberCity" promptText="City" HBox.hgrow="ALWAYS" />
-            </HBox>
-            <HBox spacing="10.0">
-                <Label text="Birth Year:" prefWidth="100" />
-                <Spinner fx:id="editMemberBirthYear" min="1900" max="2024" initialValue="2000" prefWidth="150" />
-            </HBox>
-            <HBox spacing="10.0">
-                <Label text="Membership Type:" prefWidth="100" />
-                <ComboBox fx:id="editMemberType" prefWidth="200" />
             </HBox>
             <HBox spacing="10.0">
                 <Button text="Update Member" onAction="#handleUpdateMember" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #2196f3;" />

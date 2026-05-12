@@ -69,9 +69,9 @@ public class WorkshopController {
                         : "Unknown"));
 
         loadInstructors();
-        // Populate level ComboBox items
-        newWorkshopLevel.setItems(FXCollections.observableArrayList("BEGINNER", "INTERMEDIATE", "ADVANCED"));
-        editWorkshopLevel.setItems(FXCollections.observableArrayList("BEGINNER", "INTERMEDIATE", "ADVANCED"));
+        // Populate level ComboBox items with proper capitalization
+        newWorkshopLevel.setItems(FXCollections.observableArrayList("Beginner", "Intermediate", "Advanced"));
+        editWorkshopLevel.setItems(FXCollections.observableArrayList("Beginner", "Intermediate", "Advanced"));
         
         refreshTable();
         startAutoRefresh();

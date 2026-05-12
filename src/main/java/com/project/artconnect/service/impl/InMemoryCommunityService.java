@@ -26,7 +26,6 @@ public class InMemoryCommunityService implements CommunityService {
     private CommunityMember addMember(String name, String email, String city) {
         CommunityMember m = new CommunityMember(name, email);
         m.setCity(city);
-        m.setMembershipType("Premium");
         members.put(name, m);
         return m;
     }
@@ -65,10 +64,9 @@ public class InMemoryCommunityService implements CommunityService {
         if (member.getId() > 0) {
             for (CommunityMember m : members.values()) {
                 if (m.getId() == member.getId()) {
+                    m.setName(member.getName());
                     m.setEmail(member.getEmail());
                     m.setCity(member.getCity());
-                    m.setBirthYear(member.getBirthYear());
-                    m.setMembershipType(member.getMembershipType());
                     return;
                 }
             }

@@ -8,5 +8,13 @@
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
-    <ListView fx:id="galleryList" VBox.vgrow="ALWAYS" />
+    <Label text="Galleries List" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+    <TableView fx:id="galleryTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="nameColumn" text="Name" prefWidth="250" />
+            <TableColumn fx:id="ratingColumn" text="Rating" prefWidth="100" />
+            <TableColumn fx:id="addressColumn" text="Address" prefWidth="250" />
+            <TableColumn fx:id="cityColumn" text="City" prefWidth="150" />
+        </columns>
+    </TableView>
 </VBox>

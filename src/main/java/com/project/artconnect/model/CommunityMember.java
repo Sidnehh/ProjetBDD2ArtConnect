@@ -7,11 +7,9 @@ public class CommunityMember {
     private int id;
     private String name;
     private String email;
-    private Integer birthYear;
     private String phone;
     private String city;
     private List<Discipline> favoriteDisciplines = new ArrayList<>();
-    private String membershipType; // free, premium
     private List<Booking> bookings = new ArrayList<>();
     private List<Review> reviews = new ArrayList<>();
 
@@ -23,10 +21,9 @@ public class CommunityMember {
         this.email = email;
     }
 
-    public CommunityMember(String name, String email, Integer birthYear, String city) {
+    public CommunityMember(String name, String email, String city) {
         this.name = name;
         this.email = email;
-        this.birthYear = birthYear;
         this.city = city;
     }
 
@@ -54,14 +51,6 @@ public class CommunityMember {
         this.email = email;
     }
 
-    public Integer getBirthYear() {
-        return birthYear;
-    }
-
-    public void setBirthYear(Integer birthYear) {
-        this.birthYear = birthYear;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -84,14 +73,6 @@ public class CommunityMember {
 
     public void setFavoriteDisciplines(List<Discipline> favoriteDisciplines) {
         this.favoriteDisciplines = favoriteDisciplines;
-    }
-
-    public String getMembershipType() {
-        return membershipType;
-    }
-
-    public void setMembershipType(String membershipType) {
-        this.membershipType = membershipType;
     }
 
     public List<Booking> getBookings() {

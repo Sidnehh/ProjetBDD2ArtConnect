@@ -21,16 +21,16 @@ public class InMemoryGalleryService implements GalleryService {
         Gallery met = addGallery("Metropolitan Hub", "1000 5th Ave, New York", 4.8);
 
         // Add Exhibitions
-        addExhibition("Renaissance Revival", LocalDate.now().minusMonths(1), LocalDate.now().plusMonths(2), louvre,
+        addExhibition("Renaissance Revival", LocalDate.now().minusMonths(1), louvre,
                 "Dr. Elena Rossi", "Classic Renaissance",
                 artworkService.getArtworkByTitle("Mona Lisa").orElse(null),
                 artworkService.getArtworkByTitle("The Last Supper").orElse(null));
 
-        addExhibition("Sculpting the Soul", LocalDate.now().minusDays(15), LocalDate.now().plusMonths(1), british,
+        addExhibition("Sculpting the Soul", LocalDate.now().minusDays(15), british,
                 "Marcus Thorne", "Modern & Classical Sculpture",
                 artworkService.getArtworkByTitle("The Thinker").orElse(null));
 
-        addExhibition("Impressionist Dreams", LocalDate.now().minusMonths(2), LocalDate.now().plusMonths(3), met,
+        addExhibition("Impressionist Dreams", LocalDate.now().minusMonths(2), met,
                 "Sarah Jenkins", "Light and Color",
                 artworkService.getArtworkByTitle("Water Lilies").orElse(null));
     }
@@ -41,9 +41,9 @@ public class InMemoryGalleryService implements GalleryService {
         return g;
     }
 
-    private void addExhibition(String title, LocalDate start, LocalDate end, Gallery gallery, String curator,
+    private void addExhibition(String title, LocalDate start, Gallery gallery, String curator,
             String theme, Artwork... artworks) {
-        Exhibition e = new Exhibition(title, start, end, gallery);
+        Exhibition e = new Exhibition(title, start, gallery);
         e.setCuratorName(curator);
         e.setTheme(theme);
         for (Artwork a : artworks) {

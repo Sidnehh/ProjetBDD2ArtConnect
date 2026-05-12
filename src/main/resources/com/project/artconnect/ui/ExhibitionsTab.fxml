@@ -21,10 +21,6 @@
                 <DatePicker fx:id="newExhibitionStartDate" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox spacing="10.0">
-                <Label text="End Date:" prefWidth="100" />
-                <DatePicker fx:id="newExhibitionEndDate" HBox.hgrow="ALWAYS" />
-            </HBox>
-            <HBox spacing="10.0">
                 <Label text="Theme:" prefWidth="100" />
                 <TextField fx:id="newExhibitionTheme" promptText="Exhibition theme" HBox.hgrow="ALWAYS" />
             </HBox>
@@ -42,15 +38,11 @@
             <Label text="Select an exhibition from the table below, then modify and click Update or Delete" style="-fx-text-fill: #666;" />
             <HBox spacing="10.0">
                 <Label text="Title:" prefWidth="100" />
-                <TextField fx:id="editExhibitionTitle" promptText="Title" HBox.hgrow="ALWAYS" disable="true" />
+                <TextField fx:id="editExhibitionTitle" promptText="Title" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox spacing="10.0">
                 <Label text="Start Date:" prefWidth="100" />
                 <DatePicker fx:id="editExhibitionStartDate" HBox.hgrow="ALWAYS" />
-            </HBox>
-            <HBox spacing="10.0">
-                <Label text="End Date:" prefWidth="100" />
-                <DatePicker fx:id="editExhibitionEndDate" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox spacing="10.0">
                 <Label text="Theme:" prefWidth="100" />

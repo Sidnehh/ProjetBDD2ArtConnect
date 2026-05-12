@@ -7,7 +7,6 @@ import java.util.List;
 public class Exhibition {
     private String title;
     private LocalDate startDate;
-    private LocalDate endDate;
     private String description;
     private Gallery gallery;
     private String curatorName;
@@ -17,10 +16,9 @@ public class Exhibition {
     public Exhibition() {
     }
 
-    public Exhibition(String title, LocalDate startDate, LocalDate endDate, Gallery gallery) {
+    public Exhibition(String title, LocalDate startDate, Gallery gallery) {
         this.title = title;
         this.startDate = startDate;
-        this.endDate = endDate;
         this.gallery = gallery;
     }
 
@@ -38,14 +36,6 @@ public class Exhibition {
 
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
     }
 
     public String getDescription() {

@@ -40,14 +40,12 @@ public class JdbcCommunityService implements CommunityService {
 
     @Override
     public void createMember(CommunityMember member) {
-        String sql = "INSERT INTO CommunityMember (Name, Email, BirthYear, City, MembershipType) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO CommunityMember (Name, Email, City) VALUES (?, ?, ?)";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, member.getName());
             stmt.setString(2, member.getEmail());
-            stmt.setInt(3, member.getBirthYear());
-            stmt.setString(4, member.getCity());
-            stmt.setString(5, member.getMembershipType() != null ? member.getMembershipType() : "REGULAR");
+            stmt.setString(3, member.getCity());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error creating community member: " + e.getMessage(), e);
@@ -56,14 +54,13 @@ public class JdbcCommunityService implements CommunityService {
 
     @Override
     public void updateMember(CommunityMember member) {
-        String sql = "UPDATE CommunityMember SET Email = ?, BirthYear = ?, City = ?, MembershipType = ? WHERE IdMember = ?";
+        String sql = "UPDATE CommunityMember SET Name = ?, Email = ?, City = ? WHERE IdMember = ?";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, member.getEmail());
-            stmt.setInt(2, member.getBirthYear());
+            stmt.setString(1, member.getName());
+            stmt.setString(2, member.getEmail());
             stmt.setString(3, member.getCity());
-            stmt.setString(4, member.getMembershipType() != null ? member.getMembershipType() : "REGULAR");
-            stmt.setInt(5, member.getId());
+            stmt.setInt(4, member.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error updating community member: " + e.getMessage(), e);
