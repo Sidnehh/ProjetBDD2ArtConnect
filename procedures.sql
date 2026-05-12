@@ -128,8 +128,8 @@ CREATE PROCEDURE sp_Unregister_Member_To_Exhibition(
 BEGIN
     DECLARE already_registered INT;
     SELECT COUNT(*) INTO already_registered
-    FROM RegisterWorkshop
-    WHERE IdMember = p_IdMember AND IdWorkshop = p_IdWorkshop;
+    FROM RegisterExhibition
+    WHERE IdMember = p_IdMember AND IdExhibition = p_IdExhibition;
     IF already_registered = 0 THEN
         SET p_Message = CONCAT(
             'Échec : Le membre ',
