@@ -41,54 +41,116 @@ BEGIN
 END//
 DELIMITER ;
 
--- 2. Création d'Atelier (Correct)
--- Aucune modification majeure nécessaire.
-DROP PROCEDURE IF EXISTS sp_Create_Workshop;
+-- 1. Inscrire un membre à une exposition (Correct)
+-- Aucune modification majeure nécessaire, la logique est saine.
+DROP PROCEDURE IF EXISTS sp_Register_Member_To_Exhibition;
 DELIMITER //
-CREATE PROCEDURE sp_Create_Workshop(
-    IN p_IdWorkshop INT,
-    IN p_Title VARCHAR(50),
-    IN p_IdArtist INT,
-    IN p_Date DATETIME,
-    IN p_Price DECIMAL(15,2),
-    IN p_Level VARCHAR(50),
+CREATE PROCEDURE sp_Register_Member_To_Exhibition(
+    IN p_IdMember INT,
+    IN p_IdExhibition INT,
     OUT p_Message VARCHAR(255)
 )
 BEGIN
-    INSERT INTO Workshop (IdWorkshop, Title, Date_, Price, Level, IdArtist) 
-    VALUES (p_IdWorkshop, p_Title, p_Date, p_Price, p_Level, p_IdArtist);
-    
-    SET p_Message = CONCAT('Succès : Le Workshop "', p_Title, '" a bien été créé.');
+    DECLARE already_registered INT;
+    SELECT COUNT(*) INTO already_registered
+    FROM RegisterExhibition
+    WHERE IdMember = p_IdMember AND IdExhibition = p_IdExhibition;
+
+    IF already_registered > 0 THEN
+        SET p_Message = CONCAT(
+            'Échec : Le membre ',
+            p_IdMember,
+            ' est déjà inscrit à l''exposition ',
+            p_IdExhibition,
+            '.'
+        );
+    ELSE
+        INSERT INTO RegisterExhibition (IdMember, IdExhibition)
+        VALUES (p_IdMember, p_IdExhibition);
+
+        SET p_Message = CONCAT(
+                'Succès : Inscription confirmée pour le membre ',
+                p_IdMember,
+                ' à l''exposition ',
+                p_IdExhibition,
+                '.'
+            );
+    END IF;
 END//
 DELIMITER ;
 
--- 3. Suppression d'Atelier (Corrigé : Incohérence Id_Workshop vs IdWorkshop)
-DROP PROCEDURE IF EXISTS sp_Delete_Workshop;
+-- 3. Désinscrire un membre à un atelier (Correct)
+-- Aucune modification majeure nécessaire, la logique est saine.
+DROP PROCEDURE IF EXISTS sp_Unregister_Member_To_Workshop;
 DELIMITER //
-CREATE PROCEDURE sp_Delete_Workshop(
+CREATE PROCEDURE sp_Unregister_Member_To_Workshop(
+    IN p_IdMember INT,
     IN p_IdWorkshop INT,
     OUT p_Message VARCHAR(255)
 )
 BEGIN
-    DECLARE p_Title VARCHAR(50);
-    
-    -- Récupération du titre pour le message
-    SELECT Title INTO p_Title 
-    FROM Workshop 
-    WHERE IdWorkshop = p_IdWorkshop; -- Correction : IdWorkshop (pas Id_Workshop)
-    
-    -- Suppression des inscriptions d'abord (si contrainte de clé étrangère)
-    DELETE FROM RegisterWorkshop WHERE IdWorkshop = p_IdWorkshop; -- Correction : IdWorkshop
-    
-    -- Suppression de l'atelier
-    DELETE FROM Workshop WHERE IdWorkshop = p_IdWorkshop; -- Correction : IdWorkshop
-    
-    IF p_Title IS NOT NULL THEN
-        SET p_Message = CONCAT('Succès : Le Workshop "', p_Title, '" a bien été supprimé.');
+    DECLARE already_registered INT;
+    SELECT COUNT(*) INTO already_registered
+    FROM RegisterWorkshop
+    WHERE IdMember = p_IdMember AND IdWorkshop = p_IdWorkshop;
+    IF already_registered = 0 THEN
+        SET p_Message = CONCAT(
+            'Échec : Le membre ',
+            p_IdMember,
+            ' n''est pas inscrit à l''atelier ',
+            p_IdWorkshop,
+            '.'
+        );
     ELSE
-        SET p_Message = 'Erreur : L''atelier spécifié n''existe pas.';
+        DELETE FROM RegisterWorkshop 
+        WHERE IdMember = p_IdMember AND IdWorkshop = p_IdWorkshop;
+
+        SET p_Message = CONCAT(
+                'Succès : Inscription annulée pour le membre ',
+                p_IdMember,
+                ' à l''atelier ',
+                p_IdWorkshop,
+                '.'
+            );
     END IF;
-END //
+END//
+DELIMITER ;
+
+-- 4. Désinscrire un membre à une exposition (Correct)
+-- Aucune modification majeure nécessaire, la logique est saine.
+DROP PROCEDURE IF EXISTS sp_Unregister_Member_To_Exhibition;
+DELIMITER //
+CREATE PROCEDURE sp_Unregister_Member_To_Exhibition(
+    IN p_IdMember INT,
+    IN p_IdExhibition INT,
+    OUT p_Message VARCHAR(255)
+)
+BEGIN
+    DECLARE already_registered INT;
+    SELECT COUNT(*) INTO already_registered
+    FROM RegisterWorkshop
+    WHERE IdMember = p_IdMember AND IdWorkshop = p_IdWorkshop;
+    IF already_registered = 0 THEN
+        SET p_Message = CONCAT(
+            'Échec : Le membre ',
+            p_IdMember,
+            ' n''est pas inscrit à l''exposition',
+            p_IdExhibition,
+            '.'
+        );
+    ELSE
+        DELETE FROM RegisterExhibition 
+        WHERE IdMember = p_IdMember AND IdExhibition = p_IdExhibition;
+
+        SET p_Message = CONCAT(
+                'Succès : Inscription annulée pour le membre ',
+                p_IdMember,
+                ' à l''exposition ',
+                p_IdExhibition,
+                '.'
+            );
+    END IF;
+END//
 DELIMITER ;
 
 -- -------------------------------------------------------------------------------------
