@@ -28,7 +28,7 @@ public class JdbcExhibitionDao implements ExhibitionDao {
     @Override
     public List<Exhibition> findAll() {
         List<Exhibition> exhibitions = new ArrayList<>();
-        String sql = "SELECT IdExhibition, Title, StartDate, Theme, IdGallery FROM Exhibition";
+        String sql = "SELECT IdExhibition, Title, StartDate, Theme, IdGallery FROM Exhibition ORDER BY StartDate ASC";
         
         try (Connection conn = ConnectionManager.getConnection();
              Statement stmt = conn.createStatement();

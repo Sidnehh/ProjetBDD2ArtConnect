@@ -28,7 +28,7 @@ public class JdbcWorkshopDao implements WorkshopDao {
 
     @Override
     public Optional<Workshop> findById(Long id) {
-        String sql = "SELECT IdWorkshop, Title, Date_, Price, Level, IdArtist FROM Workshop WHERE IdWorkshop = ?";
+        String sql = "SELECT IdWorkshop, Title, Date_, Price, Level, IdArtist FROM Workshop WHERE IdWorkshop = ? ORDER BY Date ASC";
         
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

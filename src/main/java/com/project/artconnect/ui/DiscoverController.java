@@ -3,6 +3,7 @@ package com.project.artconnect.ui;
 import com.project.artconnect.model.Exhibition;
 import com.project.artconnect.model.Gallery;
 import com.project.artconnect.model.Workshop;
+import com.project.artconnect.service.ExhibitionService;
 import com.project.artconnect.service.GalleryService;
 import com.project.artconnect.service.WorkshopService;
 import com.project.artconnect.util.ServiceProvider;
@@ -11,27 +12,43 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.geometry.Insets;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class DiscoverController {
     @FXML
     private FlowPane discoverPane;
 
+    private final ExhibitionService exhibitionService = ServiceProvider.getExhibitionService();
     private final GalleryService galleryService = ServiceProvider.getGalleryService();
     private final WorkshopService workshopService = ServiceProvider.getWorkshopService();
 
     @FXML
     public void initialize() {
-        // Collect some exhibitions from galleries
-        List<Exhibition> featuredExhibitions = new ArrayList<>();
-        for (Gallery g : galleryService.getAllGalleries()) {
-            featuredExhibitions.addAll(g.getExhibitions());
-            if (featuredExhibitions.size() >= 3)
-                break;
+        discoverPane.getChildren().clear();
+
+        List<Exhibition> upcomingExhibitions = exhibitionService.getAllExhibitions().stream()
+                .filter(Objects::nonNull)
+                .filter(e -> e.getStartDate() == null || !e.getStartDate().isBefore(LocalDate.now()))
+                .sorted(Comparator.comparing(Exhibition::getStartDate, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+
+        List<Workshop> upcomingWorkshops = workshopService.getAllWorkshops().stream()
+                .filter(Objects::nonNull)
+                .filter(w -> w.getDate() == null || !w.getDate().isBefore(LocalDateTime.now()))
+                .sorted(Comparator.comparing(Workshop::getDate, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+
+        if (upcomingExhibitions.isEmpty() && upcomingWorkshops.isEmpty()) {
+            discoverPane.getChildren().add(new Label("No upcoming events available."));
+            return;
         }
 
-        featuredExhibitions.stream().limit(3).forEach(this::addExhibitionCard);
-        workshopService.getAllWorkshops().stream().limit(3).forEach(this::addWorkshopCard);
+        upcomingExhibitions.forEach(this::addExhibitionCard);
+        upcomingWorkshops.forEach(this::addWorkshopCard);
     }
 
     private void addExhibitionCard(Exhibition e) {
@@ -47,6 +64,7 @@ public class DiscoverController {
                         setStyle("-fx-font-weight: bold;");
                     }
                 },
+                new Label("Date: " + e.getStartDate()),
                 new Label("Theme: " + e.getTheme()),
                 new Label("Gallery: " + (e.getGallery() != null ? e.getGallery().getName() : "Unknown")));
         discoverPane.getChildren().add(card);
@@ -65,6 +83,7 @@ public class DiscoverController {
                         setStyle("-fx-font-weight: bold;");
                     }
                 },
+                new Label("Date: " + w.getDate()),
                 new Label("Instructor: " + (w.getInstructor() != null ? w.getInstructor().getName() : "Unknown")),
                 new Label("Price: $" + w.getPrice()));
         discoverPane.getChildren().add(card);
