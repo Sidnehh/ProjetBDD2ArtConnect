@@ -34,6 +34,7 @@ public class ServiceProvider {
     private static final WorkshopService workshopService = new JdbcWorkshopService(workshopDao);
     private static final CommunityService communityService = new JdbcCommunityService(communityMemberDao);
     private static final ExhibitionService exhibitionService = new JdbcExhibitionService(exhibitionDao);
+    private static final BookingService bookingService = new JdbcBookingService();
 
     // ============================================================
     // InMemory Services (commented out - available for testing)
@@ -79,6 +80,10 @@ public class ServiceProvider {
 
     public static ExhibitionService getExhibitionService() {
         return exhibitionService;
+    }
+
+    public static BookingService getBookingService() {
+        return bookingService;
     }
 
     // ============================================================

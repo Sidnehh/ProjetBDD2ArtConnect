@@ -70,7 +70,7 @@
                 <ComboBox fx:id="editArtworkStatus" prefWidth="200" />
             </HBox>
             <HBox spacing="10.0">
-                <Button text="Update Artwork" onAction="#handleUpdateArtwork" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #2196f3;" />
+                <Button text="Update Artwork" onAction="#handleUpdateArtwork" style="-fx-font-size: 12; -fx-padding: 8;" />
                 <Button text="Delete Artwork" onAction="#handleDeleteArtwork" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #f44336;" />
             </HBox>
         </VBox>
