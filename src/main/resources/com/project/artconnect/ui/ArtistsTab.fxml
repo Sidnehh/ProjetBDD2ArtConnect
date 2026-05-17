@@ -23,6 +23,7 @@
     <!-- Add New Artist Section -->
     <TitledPane text="Add New Artist" collapsible="true" expanded="false">
         <VBox spacing="8.0" style="-fx-padding: 10;">
+            <Label text="All fields are required." style="-fx-text-fill: #666;" />
             <HBox spacing="10.0">
                 <Label text="Name:" prefWidth="80" />
                 <TextField fx:id="newArtistName" promptText="Artist name" HBox.hgrow="ALWAYS" />
@@ -49,7 +50,7 @@
             <Label text="Select an artist from the table below, then modify the fields and click Update or Delete" style="-fx-text-fill: #666;" />
             <HBox spacing="10.0">
                 <Label text="Name:" prefWidth="80" />
-                <TextField fx:id="editArtistName" promptText="Artist name" HBox.hgrow="ALWAYS" disable="true" />
+                <TextField fx:id="editArtistName" promptText="Artist name" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox spacing="10.0">
                 <Label text="Email:" prefWidth="80" />

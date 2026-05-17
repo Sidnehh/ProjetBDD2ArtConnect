@@ -80,8 +80,8 @@ public class ArtistController {
         String city = newArtistCity.getText().trim();
         String yearStr = newArtistYear.getText().trim();
 
-        if (name.isEmpty()) {
-            showAlert("Validation Error", "Please enter an artist name.");
+        if (name.isEmpty() || email.isEmpty() || city.isEmpty() || yearStr.isEmpty()) {
+            showAlert("Validation Error", "All fields are required: Name, Email, City, and Birth Year.");
             return;
         }
 

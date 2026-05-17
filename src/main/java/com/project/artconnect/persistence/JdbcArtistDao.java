@@ -60,15 +60,16 @@ public class JdbcArtistDao implements ArtistDao {
 
     @Override
     public void update(Artist artist) {
-        String sql = "UPDATE Artist SET Email = ?, City = ?, BirthYear = ? WHERE Name = ?";
+        String sql = "UPDATE Artist SET Name = ?, Email = ?, City = ?, BirthYear = ? WHERE IdArtist = ?";
         
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setString(1, artist.getContactEmail() != null ? artist.getContactEmail() : "");
-            stmt.setString(2, artist.getCity() != null ? artist.getCity() : "");
-            stmt.setInt(3, artist.getBirthYear() != null ? artist.getBirthYear() : 0);
-            stmt.setString(4, artist.getName());
+            stmt.setString(1, artist.getName());
+            stmt.setString(2, artist.getContactEmail() != null ? artist.getContactEmail() : "");
+            stmt.setString(3, artist.getCity() != null ? artist.getCity() : "");
+            stmt.setInt(4, artist.getBirthYear() != null ? artist.getBirthYear() : 0);
+            stmt.setInt(5, artist.getIdArtist());
             
             stmt.executeUpdate();
             
@@ -124,6 +125,7 @@ public class JdbcArtistDao implements ArtistDao {
      */
     private Artist mapResultSetToArtist(ResultSet rs) throws SQLException {
         Artist artist = new Artist();
+        artist.setIdArtist(rs.getInt("IdArtist"));
         artist.setName(rs.getString("Name"));
         artist.setBio(""); // Not stored in DB
         artist.setBirthYear(rs.getInt("BirthYear"));

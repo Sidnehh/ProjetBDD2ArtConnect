@@ -1,6 +1,7 @@
 package com.project.artconnect.service;
 
 import com.project.artconnect.model.Booking;
+import com.project.artconnect.model.CommunityMember;
 import com.project.artconnect.model.ExhibitionBooking;
 import com.project.artconnect.model.Workshop;
 import com.project.artconnect.model.Exhibition;
@@ -17,4 +18,7 @@ public interface BookingService {
     void unregisterFromExhibition(int memberId, int exhibitionId);
     List<ExhibitionBooking> getMemberExhibitionBookings(int memberId);
     List<Exhibition> getAvailableExhibitionsForMember(int memberId);
+
+    List<CommunityMember> getWorkshopMembers(int workshopId);
+    List<CommunityMember> getExhibitionMembers(int exhibitionId);
 }

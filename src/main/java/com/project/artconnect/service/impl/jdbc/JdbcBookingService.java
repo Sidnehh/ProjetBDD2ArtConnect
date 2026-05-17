@@ -173,6 +173,61 @@ public class JdbcBookingService implements BookingService {
         return exhibitions;
     }
 
+    @Override
+    public List<CommunityMember> getWorkshopMembers(int workshopId) {
+        List<CommunityMember> members = new ArrayList<>();
+        String sql = "SELECT cm.IdMember, cm.Name, cm.Email, cm.City " +
+                     "FROM RegisterWorkshop rw " +
+                     "JOIN CommunityMember cm ON rw.IdMember = cm.IdMember " +
+                     "WHERE rw.IdWorkshop = ? " +
+                     "ORDER BY cm.Name";
+
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, workshopId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                members.add(mapResultSetToMember(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving workshop members: " + e.getMessage(), e);
+        }
+
+        return members;
+    }
+
+    @Override
+    public List<CommunityMember> getExhibitionMembers(int exhibitionId) {
+        List<CommunityMember> members = new ArrayList<>();
+        String sql = "SELECT cm.IdMember, cm.Name, cm.Email, cm.City " +
+                     "FROM RegisterExhibition re " +
+                     "JOIN CommunityMember cm ON re.IdMember = cm.IdMember " +
+                     "WHERE re.IdExhibition = ? " +
+                     "ORDER BY cm.Name";
+
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, exhibitionId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                members.add(mapResultSetToMember(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving exhibition members: " + e.getMessage(), e);
+        }
+
+        return members;
+    }
+
+    private CommunityMember mapResultSetToMember(ResultSet rs) throws SQLException {
+        CommunityMember member = new CommunityMember();
+        member.setId(rs.getInt("IdMember"));
+        member.setName(rs.getString("Name"));
+        member.setEmail(rs.getString("Email"));
+        member.setCity(rs.getString("City"));
+        return member;
+    }
+
     private Workshop mapResultSetToWorkshop(ResultSet rs) throws SQLException {
         Workshop workshop = new Workshop();
         workshop.setId(rs.getInt("IdWorkshop"));

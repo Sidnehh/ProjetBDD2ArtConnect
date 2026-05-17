@@ -77,6 +77,7 @@ public class JdbcWorkshopDao implements WorkshopDao {
      */
     private Workshop mapResultSetToWorkshop(ResultSet rs) throws SQLException {
         Workshop workshop = new Workshop();
+        workshop.setId(rs.getInt("IdWorkshop"));
         workshop.setTitle(rs.getString("Title"));
         workshop.setDate(rs.getTimestamp("Date_").toLocalDateTime());
         workshop.setPrice(rs.getDouble("Price"));
@@ -103,6 +104,7 @@ public class JdbcWorkshopDao implements WorkshopDao {
             
             if (rs.next()) {
                 Artist artist = new Artist();
+                artist.setIdArtist(rs.getInt("IdArtist"));
                 artist.setName(rs.getString("Name"));
                 artist.setBirthYear(rs.getInt("BirthYear"));
                 artist.setContactEmail(rs.getString("Email"));

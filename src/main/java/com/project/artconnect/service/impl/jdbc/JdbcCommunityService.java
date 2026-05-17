@@ -40,16 +40,29 @@ public class JdbcCommunityService implements CommunityService {
 
     @Override
     public void createMember(CommunityMember member) {
-        String sql = "INSERT INTO CommunityMember (Name, Email, City) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO CommunityMember (IdMember, Name, Email, City) VALUES (?, ?, ?, ?)";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, member.getName());
-            stmt.setString(2, member.getEmail());
-            stmt.setString(3, member.getCity());
+            int nextId = getNextMemberId(conn);
+            stmt.setInt(1, nextId);
+            stmt.setString(2, member.getName());
+            stmt.setString(3, member.getEmail());
+            stmt.setString(4, member.getCity());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error creating community member: " + e.getMessage(), e);
         }
+    }
+
+    private int getNextMemberId(Connection conn) throws SQLException {
+        String sql = "SELECT MAX(IdMember) as maxId FROM CommunityMember";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("maxId") + 1;
+            }
+        }
+        return 1;
     }
 
     @Override
