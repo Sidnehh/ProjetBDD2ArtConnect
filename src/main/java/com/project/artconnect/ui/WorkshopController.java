@@ -102,14 +102,14 @@ public class WorkshopController {
         String priceStr = newWorkshopPrice.getText().trim();
         String level = newWorkshopLevel.getValue();
 
-        if (title.isEmpty() || date == null || instructor == null) {
-            showAlert("Validation Error", "Please fill in Title, Date, and Instructor.");
+        if (title.isEmpty() || date == null || instructor == null || timeStr.isEmpty() || priceStr.isEmpty() || level == null) {
+            showAlert("Validation Error", "Please fill in all fields: Title, Date, Time, Instructor, Price, and Level.");
             return;
         }
 
         try {
-            double price = priceStr.isEmpty() ? 0.0 : Double.parseDouble(priceStr);
-            LocalTime time = timeStr.isEmpty() ? LocalTime.of(9,0) : LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("H:mm"));
+            double price = Double.parseDouble(priceStr);
+            LocalTime time = LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("H:mm"));
             LocalDateTime dateTime = LocalDateTime.of(date, time);
             Workshop workshop = new Workshop(title, dateTime, instructor, price);
             workshop.setLevel(level);
@@ -212,6 +212,7 @@ public class WorkshopController {
     }
 
     private void refreshTable() {
+        loadInstructors();
         workshopTable.setItems(FXCollections.observableArrayList(workshopService.getAllWorkshops()));
         clearEditFields();
     }

@@ -19,6 +19,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 
 import java.util.List;
@@ -74,6 +77,7 @@ public class RegistrationController {
     private final WorkshopService workshopService = ServiceProvider.getWorkshopService();
     private final ExhibitionService exhibitionService = ServiceProvider.getExhibitionService();
     private final BookingService bookingService = ServiceProvider.getBookingService();
+    private Timeline autoRefreshTimeline;
 
     @FXML
     public void initialize() {
@@ -87,6 +91,7 @@ public class RegistrationController {
         reloadSelectors();
         refreshMemberEnrollments();
         refreshTargetMembers();
+        startAutoRefresh();
     }
 
     @FXML
@@ -320,6 +325,16 @@ public class RegistrationController {
 
     private boolean isWorkshopMode() {
         return "Workshop".equals(targetTypeCombo.getValue());
+    }
+
+    private void startAutoRefresh() {
+        autoRefreshTimeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+            reloadSelectors();
+            refreshMemberEnrollments();
+            refreshTargetMembers();
+        }));
+        autoRefreshTimeline.setCycleCount(Timeline.INDEFINITE);
+        autoRefreshTimeline.play();
     }
 
     private void showInfo(String message) {

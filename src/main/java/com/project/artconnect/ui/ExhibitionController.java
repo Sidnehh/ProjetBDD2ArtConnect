@@ -82,8 +82,8 @@ public class ExhibitionController {
         String theme = newExhibitionTheme.getText().trim();
         Gallery gallery = newExhibitionGallery.getValue();
 
-        if (title.isEmpty() || startDate == null) {
-            showAlert("Validation Error", "Please fill in Title and Start Date.");
+        if (title.isEmpty() || startDate == null || theme.isEmpty() || gallery == null) {
+            showAlert("Validation Error", "Please fill in all fields: Title, Start Date, Theme, and Gallery.");
             return;
         }
 
@@ -188,6 +188,7 @@ public class ExhibitionController {
     }
 
     private void refreshData() {
+        loadGalleries();
         List<Exhibition> all = exhibitionService.getAllExhibitions();
         exhibitionTable.setItems(FXCollections.observableArrayList(all));
         clearEditFields();

@@ -137,13 +137,13 @@ public class ArtworkController {
         String status = newArtworkStatus.getValue();
         Artist artist = newArtworkArtist.getValue();
 
-        if (title.isEmpty() || type == null || status == null || artist == null) {
-            showAlert("Validation Error", "Please fill in all fields including selecting an artist.");
+        if (title.isEmpty() || type == null || status == null || artist == null || priceStr.isEmpty()) {
+            showAlert("Validation Error", "Please fill in all fields: Title, Type, Artist, Price, and Status.");
             return;
         }
 
         try {
-            double price = priceStr.isEmpty() ? 0.0 : Double.parseDouble(priceStr);
+            double price = Double.parseDouble(priceStr);
             Artwork artwork = new Artwork(title, null, type, price, artist);
             artwork.setStatus(status != null ? Artwork.Status.valueOf(status) : Artwork.Status.FOR_SALE);
 
@@ -238,6 +238,8 @@ public class ArtworkController {
     }
 
     private void refreshTable() {
+        setupArtistComboBox(newArtworkArtist);
+        setupArtistComboBox(editArtworkArtist);
         artworkTable.setItems(FXCollections.observableArrayList(artworkService.getAllArtworks()));
         clearEditFields();
     }

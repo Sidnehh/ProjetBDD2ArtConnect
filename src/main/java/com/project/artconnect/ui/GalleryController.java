@@ -71,13 +71,13 @@ public class GalleryController {
         String city = newGalleryCity.getText().trim();
         String ratingStr = newGalleryRating.getText().trim();
 
-        if (name.isEmpty()) {
-            showAlert("Validation Error", "Please enter a gallery name.");
+        if (name.isEmpty() || street.isEmpty() || city.isEmpty() || ratingStr.isEmpty()) {
+            showAlert("Validation Error", "Please fill in all fields: Name, Street, City, and Rating.");
             return;
         }
 
         try {
-            double rating = ratingStr.isEmpty() ? 0.0 : Double.parseDouble(ratingStr);
+            double rating = Double.parseDouble(ratingStr);
             Gallery g = new Gallery(name, street, city, rating);
             galleryService.createGallery(g);
 
