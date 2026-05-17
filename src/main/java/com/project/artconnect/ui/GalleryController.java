@@ -61,7 +61,6 @@ public class GalleryController {
         cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
 
         refreshTable();
-        startAutoRefresh();
     }
 
     @FXML
@@ -78,8 +77,17 @@ public class GalleryController {
 
         try {
             double rating = Double.parseDouble(ratingStr);
+            if (rating < 0.0 || rating > 5.0) {
+                showAlert("Validation Error", "Rating must be between 0 and 5.");
+                return;
+            }
             Gallery g = new Gallery(name, street, city, rating);
-            galleryService.createGallery(g);
+            try {
+                galleryService.createGallery(g);
+            } catch (RuntimeException re) {
+                showAlert("Error", "Failed to add gallery: " + re.getMessage());
+                return;
+            }
 
             newGalleryName.clear();
             newGalleryStreet.clear();
@@ -88,6 +96,10 @@ public class GalleryController {
 
             showAlert("Success", "Gallery '" + name + "' added successfully!");
             refreshTable();
+
+            if (RegistrationController.getInstance() != null) {
+                RegistrationController.getInstance().reloadSelectors();
+            }
         } catch (NumberFormatException e) {
             showAlert("Validation Error", "Rating must be a valid number.");
         }
@@ -107,15 +119,27 @@ public class GalleryController {
 
         try {
             double rating = ratingStr.isEmpty() ? selectedGallery.getRating() : Double.parseDouble(ratingStr);
+            if (rating < 0.0 || rating > 5.0) {
+                showAlert("Validation Error", "Rating must be between 0 and 5.");
+                return;
+            }
             if (!name.isEmpty()) selectedGallery.setName(name);
             selectedGallery.setStreetName(street);
             selectedGallery.setCity(city);
             selectedGallery.setRating(rating);
 
-            galleryService.updateGallery(selectedGallery);
+            try {
+                galleryService.updateGallery(selectedGallery);
+            } catch (RuntimeException re) {
+                showAlert("Error", "Failed to update gallery: " + re.getMessage());
+                return;
+            }
+
             showAlert("Success", "Gallery '" + selectedGallery.getName() + "' updated successfully!");
             refreshTable();
             clearEditFields();
+
+            RegistrationController.refreshSelectorsIfOpen();
         } catch (NumberFormatException e) {
             showAlert("Validation Error", "Rating must be a valid number.");
         }
@@ -132,10 +156,17 @@ public class GalleryController {
         confirm.setTitle("Confirm Delete");
         confirm.setContentText("Are you sure you want to delete '" + selectedGallery.getName() + "'?");
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-            galleryService.deleteGallery(selectedGallery.getName());
+            try {
+                galleryService.deleteGallery(selectedGallery.getName());
+            } catch (RuntimeException re) {
+                showAlert("Error", "Failed to delete gallery: " + re.getMessage());
+                return;
+            }
             showAlert("Success", "Gallery '" + selectedGallery.getName() + "' deleted successfully!");
             refreshTable();
             clearEditFields();
+
+            RegistrationController.refreshSelectorsIfOpen();
         }
     }
 

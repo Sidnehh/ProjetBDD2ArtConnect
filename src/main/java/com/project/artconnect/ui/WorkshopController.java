@@ -20,6 +20,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class WorkshopController {
+    private static WorkshopController instance;
+
+    public static void refreshArtistSelectorsIfOpen() {
+        if (instance != null) {
+            instance.loadInstructors();
+        }
+    }
+
     @FXML
     private TableView<Workshop> workshopTable;
     @FXML
@@ -70,6 +78,7 @@ public class WorkshopController {
 
     @FXML
     public void initialize() {
+        instance = this;
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -85,7 +94,6 @@ public class WorkshopController {
         editWorkshopLevel.setItems(FXCollections.observableArrayList("Beginner", "Intermediate", "Advanced"));
         
         refreshTable();
-        startAutoRefresh();
     }
 
     private void loadInstructors() {
@@ -114,7 +122,12 @@ public class WorkshopController {
             Workshop workshop = new Workshop(title, dateTime, instructor, price);
             workshop.setLevel(level);
 
-            workshopService.save(workshop);
+            try {
+                workshopService.save(workshop);
+            } catch (RuntimeException re) {
+                showAlert("Error", "Failed to add workshop: " + re.getMessage());
+                return;
+            }
 
             newWorkshopTitle.clear();
             newWorkshopDate.setValue(null);
@@ -124,6 +137,9 @@ public class WorkshopController {
 
             showAlert("Success", "Workshop '" + title + "' added successfully!");
             refreshTable();
+            if (RegistrationController.getInstance() != null) {
+                RegistrationController.getInstance().reloadSelectors();
+            }
         } catch (NumberFormatException e) {
             showAlert("Validation Error", "Price must be a valid number.");
         } catch (DateTimeParseException e) {
@@ -160,10 +176,17 @@ public class WorkshopController {
             selectedWorkshop.setPrice(price);
             selectedWorkshop.setLevel(level);
 
-            workshopService.update(selectedWorkshop);
+            try {
+                workshopService.update(selectedWorkshop);
+            } catch (RuntimeException re) {
+                showAlert("Error", "Failed to update workshop: " + re.getMessage());
+                return;
+            }
+
             showAlert("Success", "Workshop '" + selectedWorkshop.getTitle() + "' updated successfully!");
             refreshTable();
             clearEditFields();
+            RegistrationController.refreshSelectorsIfOpen();
         } catch (NumberFormatException e) {
             showAlert("Validation Error", "Price must be a valid number.");
         } catch (DateTimeParseException e) {
@@ -182,10 +205,16 @@ public class WorkshopController {
         confirm.setTitle("Confirm Delete");
         confirm.setContentText("Are you sure you want to delete '" + selectedWorkshop.getTitle() + "'?");
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-            workshopService.delete(selectedWorkshop.getTitle());
+            try {
+                workshopService.delete(selectedWorkshop.getTitle());
+            } catch (RuntimeException re) {
+                showAlert("Error", "Failed to delete workshop: " + re.getMessage());
+                return;
+            }
             showAlert("Success", "Workshop '" + selectedWorkshop.getTitle() + "' deleted successfully!");
             refreshTable();
             clearEditFields();
+            RegistrationController.refreshSelectorsIfOpen();
         }
     }
 

@@ -35,7 +35,6 @@
         <HBox spacing="10.0" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="4" alignment="CENTER_LEFT">
             <Button text="Register" onAction="#handleRegister" style="-fx-background-color: #4caf50; -fx-text-fill: white;" />
             <Button text="Unregister" onAction="#handleUnregister" style="-fx-background-color: #f44336; -fx-text-fill: white;" />
-            <Button text="Refresh" onAction="#handleRefreshAll" />
         </HBox>
     </GridPane>
 

@@ -59,7 +59,7 @@ public class JdbcExhibitionDao implements ExhibitionDao {
             stmt.setString(2, exhibition.getTitle());
             stmt.setDate(3, java.sql.Date.valueOf(exhibition.getStartDate()));
             stmt.setString(4, exhibition.getTheme() != null ? exhibition.getTheme() : "");
-            stmt.setInt(5, 1); // Default gallery ID
+            stmt.setInt(5, exhibition.getGallery() != null ? exhibition.getGallery().getId() : 0);
             
             stmt.executeUpdate();
             

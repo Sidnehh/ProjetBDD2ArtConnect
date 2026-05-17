@@ -79,8 +79,21 @@ public class RegistrationController {
     private final BookingService bookingService = ServiceProvider.getBookingService();
     private Timeline autoRefreshTimeline;
 
+    private static RegistrationController instance;
+
+    public static RegistrationController getInstance() {
+        return instance;
+    }
+
+    public static void refreshSelectorsIfOpen() {
+        if (instance != null) {
+            instance.reloadSelectors();
+        }
+    }
+
     @FXML
     public void initialize() {
+        instance = this;
         setupColumns();
         setupConverters();
         setupListeners();
@@ -91,7 +104,6 @@ public class RegistrationController {
         reloadSelectors();
         refreshMemberEnrollments();
         refreshTargetMembers();
-        startAutoRefresh();
     }
 
     @FXML
@@ -249,7 +261,7 @@ public class RegistrationController {
         exhibitionCombo.valueProperty().addListener((obs, oldV, newV) -> refreshTargetMembers());
     }
 
-    private void reloadSelectors() {
+    public void reloadSelectors() {
         List<CommunityMember> members = communityService.getAllMembers();
         List<Workshop> workshops = workshopService.getAllWorkshops();
         List<Exhibition> exhibitions = exhibitionService.getAllExhibitions();

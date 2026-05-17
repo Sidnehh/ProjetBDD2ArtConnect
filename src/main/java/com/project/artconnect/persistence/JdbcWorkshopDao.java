@@ -72,6 +72,67 @@ public class JdbcWorkshopDao implements WorkshopDao {
         return workshops;
     }
 
+    @Override
+    public void save(Workshop workshop) {
+        String sql = "INSERT INTO Workshop (IdWorkshop, Title, Date_, Price, Level, IdArtist) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            int nextId = getNextWorkshopId(conn);
+            stmt.setInt(1, nextId);
+            stmt.setString(2, workshop.getTitle());
+            stmt.setTimestamp(3, Timestamp.valueOf(workshop.getDate()));
+            stmt.setDouble(4, workshop.getPrice());
+            stmt.setString(5, workshop.getLevel() != null ? workshop.getLevel() : "Beginner");
+            stmt.setInt(6, workshop.getInstructor() != null ? workshop.getInstructor().getIdArtist() : 0);
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error saving workshop: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void update(Workshop workshop) {
+        String sql = "UPDATE Workshop SET Title = ?, Date_ = ?, Price = ?, Level = ?, IdArtist = ? WHERE IdWorkshop = ?";
+
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, workshop.getTitle());
+            stmt.setTimestamp(2, Timestamp.valueOf(workshop.getDate()));
+            stmt.setDouble(3, workshop.getPrice());
+            stmt.setString(4, workshop.getLevel() != null ? workshop.getLevel() : "Beginner");
+            stmt.setInt(5, workshop.getInstructor() != null ? workshop.getInstructor().getIdArtist() : 0);
+            stmt.setInt(6, workshop.getId());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error updating workshop: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void delete(String title) {
+        String sql = "DELETE FROM Workshop WHERE Title = ?";
+
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, title);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error deleting workshop: " + e.getMessage());
+        }
+    }
+
     /**
      * Maps a ResultSet row to a Workshop object.
      */
@@ -119,5 +180,16 @@ public class JdbcWorkshopDao implements WorkshopDao {
         }
         
         return null;
+    }
+
+    private int getNextWorkshopId(Connection conn) throws SQLException {
+        String sql = "SELECT MAX(IdWorkshop) as maxId FROM Workshop";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("maxId") + 1;
+            }
+        }
+        return 1;
     }
 }

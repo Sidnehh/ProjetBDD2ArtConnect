@@ -17,6 +17,15 @@ import javafx.util.Duration;
 import javafx.util.StringConverter;
 
 public class ArtworkController {
+    private static ArtworkController instance;
+
+    public static void refreshArtistSelectorsIfOpen() {
+        if (instance != null) {
+            instance.setupArtistComboBox(instance.newArtworkArtist);
+            instance.setupArtistComboBox(instance.editArtworkArtist);
+        }
+    }
+
     @FXML
     private TableView<Artwork> artworkTable;
     @FXML
@@ -64,6 +73,7 @@ public class ArtworkController {
 
     @FXML
     public void initialize() {
+        instance = this;
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -89,7 +99,6 @@ public class ArtworkController {
         setupArtistComboBox(editArtworkArtist);
 
         refreshTable();
-        startAutoRefresh();
     }
 
     @FXML

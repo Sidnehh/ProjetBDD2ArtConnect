@@ -58,7 +58,6 @@ public class ArtistController {
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("birthYear"));
 
         refreshTable();
-        startAutoRefresh();
     }
 
     @FXML
@@ -88,7 +87,12 @@ public class ArtistController {
         try {
             Integer year = yearStr.isEmpty() ? null : Integer.parseInt(yearStr);
             Artist artist = new Artist(name, "", year, email, city);
-            artistService.createArtist(artist);
+            try {
+                artistService.createArtist(artist);
+            } catch (RuntimeException re) {
+                showAlert("Error", "Failed to add artist: " + re.getMessage());
+                return;
+            }
 
             // Clear form
             newArtistName.clear();
@@ -98,6 +102,8 @@ public class ArtistController {
 
             showAlert("Success", "Artist '" + name + "' added successfully!");
             refreshTable();
+            ArtworkController.refreshArtistSelectorsIfOpen();
+            WorkshopController.refreshArtistSelectorsIfOpen();
         } catch (NumberFormatException e) {
             showAlert("Validation Error", "Birth Year must be a valid number.");
         }
@@ -124,10 +130,18 @@ public class ArtistController {
             selectedArtist.setCity(city);
             selectedArtist.setBirthYear(year);
 
-            artistService.updateArtist(selectedArtist);
+            try {
+                artistService.updateArtist(selectedArtist);
+            } catch (RuntimeException re) {
+                showAlert("Error", "Failed to update artist: " + re.getMessage());
+                return;
+            }
+
             showAlert("Success", "Artist '" + selectedArtist.getName() + "' updated successfully!");
             refreshTable();
             clearEditFields();
+            ArtworkController.refreshArtistSelectorsIfOpen();
+            WorkshopController.refreshArtistSelectorsIfOpen();
         } catch (NumberFormatException e) {
             showAlert("Validation Error", "Birth Year must be a valid number.");
         }
@@ -144,10 +158,17 @@ public class ArtistController {
         confirm.setTitle("Confirm Delete");
         confirm.setContentText("Are you sure you want to delete '" + selectedArtist.getName() + "'?");
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-            artistService.deleteArtist(selectedArtist.getName());
+            try {
+                artistService.deleteArtist(selectedArtist.getName());
+            } catch (RuntimeException re) {
+                showAlert("Error", "Failed to delete artist: " + re.getMessage());
+                return;
+            }
             showAlert("Success", "Artist '" + selectedArtist.getName() + "' deleted successfully!");
             refreshTable();
             clearEditFields();
+            ArtworkController.refreshArtistSelectorsIfOpen();
+            WorkshopController.refreshArtistSelectorsIfOpen();
         }
     }
 

@@ -59,7 +59,7 @@ public class JdbcArtworkDao implements ArtworkDao {
             stmt.setDouble(3, artwork.getPrice());
             stmt.setString(4, artwork.getStatus() != null ? artwork.getStatus().toString() : "FOR_SALE");
             stmt.setString(5, artwork.getType());
-            stmt.setInt(6, 1); // Default artist ID for now
+            stmt.setInt(6, artwork.getArtist() != null ? artwork.getArtist().getIdArtist() : 0);
             
             stmt.executeUpdate();
             
@@ -71,7 +71,7 @@ public class JdbcArtworkDao implements ArtworkDao {
 
     @Override
     public void update(Artwork artwork) {
-        String sql = "UPDATE Artwork SET Price = ?, Status = ?, Type = ? WHERE Title = ?";
+        String sql = "UPDATE Artwork SET Price = ?, Status = ?, Type = ?, IdArtist = ? WHERE Title = ?";
         
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -79,7 +79,8 @@ public class JdbcArtworkDao implements ArtworkDao {
             stmt.setDouble(1, artwork.getPrice());
             stmt.setString(2, artwork.getStatus() != null ? artwork.getStatus().toString() : "FOR_SALE");
             stmt.setString(3, artwork.getType());
-            stmt.setString(4, artwork.getTitle());
+            stmt.setInt(4, artwork.getArtist() != null ? artwork.getArtist().getIdArtist() : 0);
+            stmt.setString(5, artwork.getTitle());
             
             stmt.executeUpdate();
             
@@ -163,6 +164,7 @@ public class JdbcArtworkDao implements ArtworkDao {
             
             if (rs.next()) {
                 Artist artist = new Artist();
+                artist.setIdArtist(rs.getInt("IdArtist"));
                 artist.setName(rs.getString("Name"));
                 artist.setBirthYear(rs.getInt("BirthYear"));
                 artist.setContactEmail(rs.getString("Email"));

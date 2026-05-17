@@ -51,7 +51,6 @@ public class CommunityController {
         cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
 
         refreshTable();
-        startAutoRefresh();
     }
 
     @FXML
@@ -79,6 +78,9 @@ public class CommunityController {
 
         showAlert("Success", "Member '" + name + "' added successfully!");
         refreshTable();
+        if (RegistrationController.getInstance() != null) {
+            RegistrationController.getInstance().reloadSelectors();
+        }
     }
 
     @FXML
@@ -123,10 +125,17 @@ public class CommunityController {
         selectedMember.setEmail(email);
         selectedMember.setCity(city);
 
-        communityService.updateMember(selectedMember);
+        try {
+            communityService.updateMember(selectedMember);
+        } catch (RuntimeException e) {
+            showAlert("Error", "Failed to update member: " + e.getMessage());
+            return;
+        }
+
         showAlert("Success", "Member '" + selectedMember.getName() + "' updated successfully!");
         refreshTable();
         clearEditFields();
+        RegistrationController.refreshSelectorsIfOpen();
     }
 
     @FXML
@@ -140,10 +149,16 @@ public class CommunityController {
         confirm.setTitle("Confirm Delete");
         confirm.setContentText("Are you sure you want to delete '" + selectedMember.getName() + "'?");
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-            communityService.deleteMember(selectedMember.getId());
+            try {
+                communityService.deleteMember(selectedMember.getId());
+            } catch (RuntimeException e) {
+                showAlert("Error", "Failed to delete member: " + e.getMessage());
+                return;
+            }
             showAlert("Success", "Member '" + selectedMember.getName() + "' deleted successfully!");
             refreshTable();
             clearEditFields();
+            RegistrationController.refreshSelectorsIfOpen();
         }
     }
 

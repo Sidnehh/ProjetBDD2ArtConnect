@@ -66,7 +66,6 @@ public class ExhibitionController {
 
         loadGalleries();
         refreshData();
-        startAutoRefresh();
     }
 
     private void loadGalleries() {
@@ -89,7 +88,12 @@ public class ExhibitionController {
 
         Exhibition exhibition = new Exhibition(title, startDate, gallery);
         exhibition.setTheme(theme);
-        exhibitionService.save(exhibition);
+        try {
+            exhibitionService.save(exhibition);
+        } catch (RuntimeException re) {
+            showAlert("Error", "Failed to add exhibition: " + re.getMessage());
+            return;
+        }
 
         newExhibitionTitle.clear();
         newExhibitionStartDate.setValue(null);
@@ -98,6 +102,9 @@ public class ExhibitionController {
 
         showAlert("Success", "Exhibition '" + title + "' added successfully!");
         refreshData();
+        if (RegistrationController.getInstance() != null) {
+            RegistrationController.getInstance().reloadSelectors();
+        }
     }
 
     @FXML
@@ -143,10 +150,17 @@ public class ExhibitionController {
         selectedExhibition.setTheme(theme);
         selectedExhibition.setGallery(editExhibitionGallery.getValue());
 
-        exhibitionService.update(selectedExhibition);
+        try {
+            exhibitionService.update(selectedExhibition);
+        } catch (RuntimeException re) {
+            showAlert("Error", "Failed to update exhibition: " + re.getMessage());
+            return;
+        }
+
         showAlert("Success", "Exhibition '" + selectedExhibition.getTitle() + "' updated successfully!");
         refreshData();
         clearEditFields();
+        RegistrationController.refreshSelectorsIfOpen();
     }
 
     @FXML
@@ -160,10 +174,16 @@ public class ExhibitionController {
         confirm.setTitle("Confirm Delete");
         confirm.setContentText("Are you sure you want to delete '" + selectedExhibition.getTitle() + "'?");
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-            exhibitionService.delete(selectedExhibition.getTitle());
+            try {
+                exhibitionService.delete(selectedExhibition.getTitle());
+            } catch (RuntimeException re) {
+                showAlert("Error", "Failed to delete exhibition: " + re.getMessage());
+                return;
+            }
             showAlert("Success", "Exhibition '" + selectedExhibition.getTitle() + "' deleted successfully!");
             refreshData();
             clearEditFields();
+            RegistrationController.refreshSelectorsIfOpen();
         }
     }
 

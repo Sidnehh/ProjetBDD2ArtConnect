@@ -3,8 +3,6 @@ package com.project.artconnect.service.impl.jdbc;
 import com.project.artconnect.dao.ExhibitionDao;
 import com.project.artconnect.model.Exhibition;
 import com.project.artconnect.service.ExhibitionService;
-import com.project.artconnect.util.ConnectionManager;
-import java.sql.*;
 import java.util.List;
 
 /**
@@ -40,44 +38,16 @@ public class JdbcExhibitionService implements ExhibitionService {
 
     @Override
     public void save(Exhibition exhibition) {
-        String sql = "INSERT INTO Exhibition (Title, StartDate, Theme, IdGallery) VALUES (?, ?, ?, ?)";
-        try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, exhibition.getTitle());
-            stmt.setDate(2, java.sql.Date.valueOf(exhibition.getStartDate()));
-            stmt.setString(3, exhibition.getTheme());
-            stmt.setInt(4, exhibition.getGallery() != null ? exhibition.getGallery().getId() : 0);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error saving exhibition: " + e.getMessage(), e);
-        }
+        exhibitionDao.save(exhibition);
     }
 
     @Override
     public void update(Exhibition exhibition) {
-        String sql = "UPDATE Exhibition SET Title = ?, StartDate = ?, Theme = ?, IdGallery = ? WHERE Title = ?";
-        try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, exhibition.getTitle());
-            stmt.setDate(2, java.sql.Date.valueOf(exhibition.getStartDate()));
-            stmt.setString(3, exhibition.getTheme());
-            stmt.setInt(4, exhibition.getGallery() != null ? exhibition.getGallery().getId() : 0);
-            stmt.setString(5, exhibition.getTitle());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error updating exhibition: " + e.getMessage(), e);
-        }
+        exhibitionDao.update(exhibition);
     }
 
     @Override
     public void delete(String title) {
-        String sql = "DELETE FROM Exhibition WHERE Title = ?";
-        try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, title);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error deleting exhibition: " + e.getMessage(), e);
-        }
+        exhibitionDao.delete(title);
     }
 }
