@@ -19,7 +19,7 @@ public class JdbcBookingService implements BookingService {
             stmt.registerOutParameter(3, Types.VARCHAR);
             stmt.execute();
             String message = stmt.getString(3);
-            if (message != null && message.toLowerCase().contains("error")) {
+            if (message != null && message.toLowerCase().contains("échec")) {
                 throw new RuntimeException(message);
             }
         } catch (SQLException e) {
@@ -37,7 +37,7 @@ public class JdbcBookingService implements BookingService {
             stmt.registerOutParameter(3, Types.VARCHAR);
             stmt.execute();
             String message = stmt.getString(3);
-            if (message != null && message.toLowerCase().contains("error")) {
+            if (message != null && message.toLowerCase().contains("échec")) {
                 throw new RuntimeException(message);
             }
         } catch (SQLException e) {
@@ -50,7 +50,7 @@ public class JdbcBookingService implements BookingService {
         List<Booking> bookings = new ArrayList<>();
         String sql = "SELECT w.IdWorkshop, w.Title, w.Date_, w.Price, w.Level, " +
                      "a.IdArtist, a.Email, a.Name, a.City, a.BirthYear " +
-                     "FROM RegisterWorkshop rw " +
+                     "FROM Registerworkshop rw " +
                      "JOIN Workshop w ON rw.IdWorkshop = w.IdWorkshop " +
                      "JOIN Artist a ON w.IdArtist = a.IdArtist " +
                      "WHERE rw.IdMember = ?";
@@ -77,7 +77,7 @@ public class JdbcBookingService implements BookingService {
                      "a.IdArtist, a.Email, a.Name, a.City, a.BirthYear " +
                      "FROM Workshop w " +
                      "JOIN Artist a ON w.IdArtist = a.IdArtist " +
-                     "WHERE w.IdWorkshop NOT IN (SELECT IdWorkshop FROM RegisterWorkshop WHERE IdMember = ?)";
+                     "WHERE w.IdWorkshop NOT IN (SELECT IdWorkshop FROM Registerworkshop WHERE IdMember = ?)";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, memberId);
@@ -101,7 +101,7 @@ public class JdbcBookingService implements BookingService {
             stmt.registerOutParameter(3, Types.VARCHAR);
             stmt.execute();
             String message = stmt.getString(3);
-            if (message != null && message.toLowerCase().contains("error")) {
+            if (message != null && message.toLowerCase().contains("échec")) {
                 throw new RuntimeException(message);
             }
         } catch (SQLException e) {
@@ -119,7 +119,7 @@ public class JdbcBookingService implements BookingService {
             stmt.registerOutParameter(3, Types.VARCHAR);
             stmt.execute();
             String message = stmt.getString(3);
-            if (message != null && message.toLowerCase().contains("error")) {
+            if (message != null && message.toLowerCase().contains("échec")) {
                 throw new RuntimeException(message);
             }
         } catch (SQLException e) {
@@ -177,7 +177,7 @@ public class JdbcBookingService implements BookingService {
     public List<CommunityMember> getWorkshopMembers(int workshopId) {
         List<CommunityMember> members = new ArrayList<>();
         String sql = "SELECT cm.IdMember, cm.Name, cm.Email, cm.City " +
-                     "FROM RegisterWorkshop rw " +
+                     "FROM Registerworkshop rw " +
                      "JOIN CommunityMember cm ON rw.IdMember = cm.IdMember " +
                      "WHERE rw.IdWorkshop = ? " +
                      "ORDER BY cm.Name";

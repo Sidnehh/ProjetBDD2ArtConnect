@@ -216,7 +216,7 @@ public class WorkshopController {
         confirm.setContentText("Are you sure you want to delete '" + selectedWorkshop.getTitle() + "'?");
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
-                workshopService.delete(selectedWorkshop.getTitle());
+                workshopService.deleteWorkshopById(selectedWorkshop.getId());
                 showAlert("Success", "Workshop '" + selectedWorkshop.getTitle() + "' deleted successfully!");
                 refreshTable();
                 clearEditFields();

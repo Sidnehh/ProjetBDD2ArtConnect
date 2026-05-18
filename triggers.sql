@@ -36,7 +36,29 @@ BEGIN
         'Installation'
     ) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Erreur : Type d''œuvre invalide. Les types autorisés sont : Painting, Sculpture, Photography.';
+        SET MESSAGE_TEXT = 'Erreur : Type d''œuvre invalide. Les types autorisés sont : Painting, Sculpture, Photography, Mixed Media, Printmaking, Digital Art, Watercolor, Installation.';
+    END IF;
+END//
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS trg_Validate_Artwork_Type_Update;
+DELIMITER //
+CREATE TRIGGER trg_Validate_Artwork_Type_Update
+BEFORE UPDATE ON Artwork
+FOR EACH ROW
+BEGIN
+    IF NEW.Type NOT IN (
+        'Painting', 
+        'Sculpture', 
+        'Photography',
+        'Mixed Media',
+        'Printmaking',
+        'Digital Art',
+        'Watercolor',
+        'Installation'
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Erreur : Type d''œuvre invalide. Les types autorisés sont : Painting, Sculpture, Photography, Mixed Media, Printmaking, Digital Art, Watercolor, Installation.';
     END IF;
 END//
 DELIMITER ;

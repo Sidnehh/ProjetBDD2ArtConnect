@@ -12,9 +12,6 @@ import java.util.*;
 public class InMemoryWorkshopService implements WorkshopService {
     private final Map<String, Workshop> workshops = new LinkedHashMap<>();
 
-    public InMemoryWorkshopService() {
-    }
-
     public void initData(ArtistService artistService) {
         addWorkshop("Mastering Oil Painting", LocalDateTime.now().plusDays(5),
                 artistService.getArtistByName("Leonardo Vinci").orElse(null), 150.0, "Intermediate", "Florence Studio");
@@ -74,5 +71,10 @@ public class InMemoryWorkshopService implements WorkshopService {
     @Override
     public void delete(String title) {
         workshops.remove(title);
+    }
+
+    @Override
+    public void deleteWorkshopById(int workshopId) {
+        workshops.values().removeIf(workshop -> workshop.getId() == workshopId);
     }
 }

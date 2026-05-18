@@ -14,5 +14,7 @@ public interface ArtworkDao {
 
     void delete(String title);
 
+    void deleteById(int artworkId);
+
     List<Artwork> findByArtistName(String artistName);
 }

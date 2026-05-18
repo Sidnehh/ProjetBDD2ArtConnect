@@ -1,9 +1,9 @@
 DROP USER IF EXISTS 'artiste'@'localhost';
-CREATE USER 'artiste'@'localhost';
+CREATE USER 'artiste'@'localhost' IDENTIFIED BY 'ArtConnectArtiste123!';
 DROP USER IF EXISTS 'membre'@'localhost';
-CREATE USER 'membre'@'localhost';
+CREATE USER 'membre'@'localhost' IDENTIFIED BY 'ArtConnectMembre123!';
 DROP USER IF EXISTS 'admin'@'localhost';
-CREATE USER 'admin'@'localhost';
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'ArtConnectAdmin123!';
 
 GRANT SELECT ON ArtConnect.view_artist_portfolio TO 'artiste'@'localhost';
 GRANT SELECT ON ArtConnect.view_artist_workshop_members TO 'artiste'@'localhost';

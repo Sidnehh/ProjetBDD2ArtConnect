@@ -22,4 +22,8 @@ public interface WorkshopService {
     void update(Workshop workshop) throws SQLException;
 
     void delete(String title);
+
+    default void deleteWorkshopById(int workshopId) {
+        throw new UnsupportedOperationException("deleteWorkshopById is not implemented");
+    }
 }

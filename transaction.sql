@@ -21,7 +21,7 @@ BEGIN
     END IF;
 
     -- supprimer les inscriptions
-    DELETE FROM RegisterWorkshop WHERE IdWorkshop = p_IdWorkshop;
+    DELETE FROM Registerworkshop WHERE IdWorkshop = p_IdWorkshop;
     -- supprimer l'atelier
     DELETE FROM Workshop WHERE IdWorkshop = p_IdWorkshop;
 
@@ -32,4 +32,5 @@ END//
 
 DELIMITER ;
 
-CALL Annulation_Atelier(27);
+-- Exemple d'appel manuel :
+-- CALL Annulation_Atelier(27);

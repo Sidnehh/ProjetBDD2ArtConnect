@@ -19,4 +19,8 @@ public interface ArtworkService {
     void updateArtwork(Artwork artwork) throws SQLException;
 
     void deleteArtwork(String title);
+
+    default void deleteArtworkById(int artworkId) {
+        throw new UnsupportedOperationException("deleteArtworkById is not implemented");
+    }
 }

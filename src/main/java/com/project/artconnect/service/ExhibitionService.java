@@ -15,6 +15,10 @@ public interface ExhibitionService {
 
     void delete(String title);
 
+    default void deleteExhibitionById(int exhibitionId) {
+        throw new UnsupportedOperationException("deleteExhibitionById is not implemented");
+    }
+
     // Legacy method names for backward compatibility
     void createExhibition(Exhibition exhibition);
 

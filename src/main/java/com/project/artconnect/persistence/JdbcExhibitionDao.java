@@ -15,14 +15,10 @@ import java.util.List;
  */
 public class JdbcExhibitionDao implements ExhibitionDao {
 
-    private GalleryDao galleryDao;
-
     public JdbcExhibitionDao() {
-        this.galleryDao = new JdbcGalleryDao();
     }
 
     public JdbcExhibitionDao(GalleryDao galleryDao) {
-        this.galleryDao = galleryDao;
     }
 
     @Override
@@ -62,6 +58,7 @@ public class JdbcExhibitionDao implements ExhibitionDao {
             stmt.setInt(5, exhibition.getGallery() != null ? exhibition.getGallery().getId() : 0);
             
             stmt.executeUpdate();
+            exhibition.setId(nextId);
             
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,7 +68,7 @@ public class JdbcExhibitionDao implements ExhibitionDao {
 
     @Override
     public void update(Exhibition exhibition) {
-        String sql = "UPDATE Exhibition SET Title = ?, StartDate = ?, Theme = ?, IdGallery = ? WHERE Title = ?";
+        String sql = "UPDATE Exhibition SET Title = ?, StartDate = ?, Theme = ?, IdGallery = ? WHERE IdExhibition = ?";
 
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -80,7 +77,7 @@ public class JdbcExhibitionDao implements ExhibitionDao {
             stmt.setDate(2, java.sql.Date.valueOf(exhibition.getStartDate()));
             stmt.setString(3, exhibition.getTheme() != null ? exhibition.getTheme() : "");
             stmt.setInt(4, exhibition.getGallery() != null ? exhibition.getGallery().getId() : 0);
-            stmt.setString(5, exhibition.getTitle());
+            stmt.setInt(5, exhibition.getId());
 
             stmt.executeUpdate();
 
@@ -100,6 +97,22 @@ public class JdbcExhibitionDao implements ExhibitionDao {
             stmt.setString(1, title);
             stmt.executeUpdate();
             
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error deleting exhibition: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteById(int exhibitionId) {
+        String sql = "DELETE FROM Exhibition WHERE IdExhibition = ?";
+
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, exhibitionId);
+            stmt.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Error deleting exhibition: " + e.getMessage());

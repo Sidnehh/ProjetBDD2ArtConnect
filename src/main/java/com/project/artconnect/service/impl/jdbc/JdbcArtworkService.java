@@ -16,11 +16,9 @@ import java.util.stream.Collectors;
  */
 public class JdbcArtworkService implements ArtworkService {
     private final ArtworkDao artworkDao;
-    private final ArtistDao artistDao;
 
     public JdbcArtworkService(ArtworkDao artworkDao, ArtistDao artistDao) {
         this.artworkDao = artworkDao;
-        this.artistDao = artistDao;
     }
 
     @Override
@@ -54,5 +52,10 @@ public class JdbcArtworkService implements ArtworkService {
     @Override
     public void deleteArtwork(String title) {
         artworkDao.delete(title);
+    }
+
+    @Override
+    public void deleteArtworkById(int artworkId) {
+        artworkDao.deleteById(artworkId);
     }
 }

@@ -57,4 +57,9 @@ public class JdbcWorkshopService implements WorkshopService {
     public void delete(String title) {
         workshopDao.delete(title);
     }
+
+    @Override
+    public void deleteWorkshopById(int workshopId) {
+        workshopDao.deleteById(workshopId);
+    }
 }

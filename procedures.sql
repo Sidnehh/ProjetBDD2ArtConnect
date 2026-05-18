@@ -15,7 +15,7 @@ CREATE PROCEDURE sp_Register_Member_To_Workshop(
 BEGIN
     DECLARE already_registered INT;
     SELECT COUNT(*) INTO already_registered
-    FROM RegisterWorkshop
+    FROM Registerworkshop
     WHERE IdMember = p_IdMember AND IdWorkshop = p_IdWorkshop;
 
     IF already_registered > 0 THEN
@@ -27,7 +27,7 @@ BEGIN
             '.'
         );
     ELSE
-        INSERT INTO RegisterWorkshop (IdMember, IdWorkshop)
+        INSERT INTO Registerworkshop (IdMember, IdWorkshop)
         VALUES (p_IdMember, p_IdWorkshop);
 
         SET p_Message = CONCAT(
@@ -91,7 +91,7 @@ CREATE PROCEDURE sp_Unregister_Member_To_Workshop(
 BEGIN
     DECLARE already_registered INT;
     SELECT COUNT(*) INTO already_registered
-    FROM RegisterWorkshop
+    FROM Registerworkshop
     WHERE IdMember = p_IdMember AND IdWorkshop = p_IdWorkshop;
     IF already_registered = 0 THEN
         SET p_Message = CONCAT(
@@ -102,7 +102,7 @@ BEGIN
             '.'
         );
     ELSE
-        DELETE FROM RegisterWorkshop 
+        DELETE FROM Registerworkshop 
         WHERE IdMember = p_IdMember AND IdWorkshop = p_IdWorkshop;
 
         SET p_Message = CONCAT(
@@ -165,18 +165,6 @@ BEGIN
 END//
 DELIMITER ;
 
--- 5. Procédure de validation de prix 
-DROP PROCEDURE IF EXISTS validate_price;
-DELIMITER //
-CREATE PROCEDURE validate_price(IN new_price DECIMAL(10,2))
-BEGIN
-    IF new_price <= 0 THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Erreur : Prix invalide. Le prix doit être supérieur à 0';
-    END IF;
-END//
-DELIMITER ;
-
 -- -. Procédure de validation de note
 DROP PROCEDURE IF EXISTS validate_rating;
 DELIMITER //
@@ -220,7 +208,7 @@ BEGIN
     DECLARE nb_participants INT;
 
     SELECT COUNT(*) INTO nb_participants
-    FROM RegisterWorkshop
+    FROM Registerworkshop
     WHERE IdWorkshop = p_IdWorkshop;
 
     RETURN nb_participants;
@@ -240,15 +228,15 @@ BEGIN
     DECLARE workshop_revenue DOUBLE;
     
     -- Calcul du CA : Somme des prix des ateliers de cet artiste qui ont des inscriptions + prix des oeuvres vendues
-    SELECT SUM(Price) INTO artwork_revenue
+    SELECT COALESCE(SUM(Price), 0) INTO artwork_revenue
     FROM Artwork 
-    WHERE IdArtist = IdArtist AND Status = "SOLD";
+    WHERE IdArtist = p_IdArtist AND Status = 'SOLD';
     
-    SELECT SUM(Price) INTO workshop_revenue
+    SELECT COALESCE(SUM(w.Price), 0) INTO workshop_revenue
     FROM Workshop w
-    INNER JOIN RegisterWorkshop rw ON w.IdWorkshop = rw.IdWorkshop
+    INNER JOIN Registerworkshop rw ON w.IdWorkshop = rw.IdWorkshop
     WHERE w.IdArtist = p_IdArtist;
     
-    RETURN artwork_revenue+workshop_revenue;
+    RETURN COALESCE(artwork_revenue, 0) + COALESCE(workshop_revenue, 0);
 END//
 DELIMITER ;

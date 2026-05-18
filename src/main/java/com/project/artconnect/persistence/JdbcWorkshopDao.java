@@ -16,19 +16,15 @@ import java.util.Optional;
  */
 public class JdbcWorkshopDao implements WorkshopDao {
 
-    private ArtistDao artistDao;
-
     public JdbcWorkshopDao() {
-        this.artistDao = new JdbcArtistDao();
     }
 
     public JdbcWorkshopDao(ArtistDao artistDao) {
-        this.artistDao = artistDao;
     }
 
     @Override
     public Optional<Workshop> findById(Long id) {
-        String sql = "SELECT IdWorkshop, Title, Date_, Price, Level, IdArtist FROM Workshop WHERE IdWorkshop = ? ORDER BY Date ASC";
+        String sql = "SELECT IdWorkshop, Title, Date_, Price, Level, IdArtist FROM Workshop WHERE IdWorkshop = ?";
         
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -88,6 +84,7 @@ public class JdbcWorkshopDao implements WorkshopDao {
             stmt.setInt(6, workshop.getInstructor() != null ? workshop.getInstructor().getIdArtist() : 0);
 
             stmt.executeUpdate();
+            workshop.setId(nextId);
             }
     }
 
@@ -117,6 +114,22 @@ public class JdbcWorkshopDao implements WorkshopDao {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, title);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error deleting workshop: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteById(int workshopId) {
+        String sql = "DELETE FROM Workshop WHERE IdWorkshop = ?";
+
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, workshopId);
             stmt.executeUpdate();
 
         } catch (SQLException e) {

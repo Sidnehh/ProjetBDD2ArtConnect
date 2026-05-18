@@ -70,4 +70,9 @@ public class InMemoryArtworkService implements ArtworkService {
     public void deleteArtwork(String title) {
         artworks.remove(title);
     }
+
+    @Override
+    public void deleteArtworkById(int artworkId) {
+        artworks.values().removeIf(artwork -> artwork.getId() == artworkId);
+    }
 }

@@ -177,7 +177,7 @@ public class ExhibitionController {
         confirm.setContentText("Are you sure you want to delete '" + selectedExhibition.getTitle() + "'?");
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
-                exhibitionService.delete(selectedExhibition.getTitle());
+                exhibitionService.deleteExhibitionById(selectedExhibition.getId());
             } catch (RuntimeException re) {
                 showAlert("Error", "Failed to delete exhibition: " + re.getMessage());
                 return;

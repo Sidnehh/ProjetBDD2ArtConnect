@@ -37,6 +37,11 @@ public class JdbcExhibitionService implements ExhibitionService {
     }
 
     @Override
+    public void deleteExhibitionById(int exhibitionId) {
+        exhibitionDao.deleteById(exhibitionId);
+    }
+
+    @Override
     public void save(Exhibition exhibition) {
         exhibitionDao.save(exhibition);
     }

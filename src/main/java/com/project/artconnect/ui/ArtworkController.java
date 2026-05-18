@@ -234,7 +234,7 @@ public class ArtworkController {
         confirm.setContentText("Are you sure you want to delete '" + selectedArtwork.getTitle() + "'?");
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
-                artworkService.deleteArtwork(selectedArtwork.getTitle());
+                artworkService.deleteArtworkById(selectedArtwork.getId());
                 showAlert("Success", "Artwork '" + selectedArtwork.getTitle() + "' deleted successfully!");
                 refreshTable();
                 clearEditFields();

@@ -16,4 +16,6 @@ public interface WorkshopDao {
     void update(Workshop workshop) throws SQLException;
 
     void delete(String title);
+
+    void deleteById(int workshopId);
 }

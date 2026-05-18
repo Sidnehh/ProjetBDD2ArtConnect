@@ -14,14 +14,10 @@ import java.util.List;
  */
 public class JdbcArtworkDao implements ArtworkDao {
 
-    private ArtistDao artistDao;
-
     public JdbcArtworkDao() {
-        this.artistDao = new JdbcArtistDao();
     }
 
     public JdbcArtworkDao(ArtistDao artistDao) {
-        this.artistDao = artistDao;
     }
 
     @Override
@@ -62,22 +58,24 @@ public class JdbcArtworkDao implements ArtworkDao {
             stmt.setInt(6, artwork.getArtist() != null ? artwork.getArtist().getIdArtist() : 0);
             
             stmt.executeUpdate();
+            artwork.setId(nextId);
             
         }
     }
 
     @Override
     public void update(Artwork artwork) throws SQLException{
-        String sql = "UPDATE Artwork SET Price = ?, Status = ?, Type = ?, IdArtist = ? WHERE Title = ?";
+        String sql = "UPDATE Artwork SET Title = ?, Price = ?, Status = ?, Type = ?, IdArtist = ? WHERE IdArtwork = ?";
         
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setDouble(1, artwork.getPrice());
-            stmt.setString(2, artwork.getStatus() != null ? artwork.getStatus().toString() : "FOR_SALE");
-            stmt.setString(3, artwork.getType());
-            stmt.setInt(4, artwork.getArtist() != null ? artwork.getArtist().getIdArtist() : 0);
-            stmt.setString(5, artwork.getTitle());
+            stmt.setString(1, artwork.getTitle());
+            stmt.setDouble(2, artwork.getPrice());
+            stmt.setString(3, artwork.getStatus() != null ? artwork.getStatus().toString() : "FOR_SALE");
+            stmt.setString(4, artwork.getType());
+            stmt.setInt(5, artwork.getArtist() != null ? artwork.getArtist().getIdArtist() : 0);
+            stmt.setInt(6, artwork.getId());
             
             stmt.executeUpdate(); 
         } 
@@ -93,6 +91,22 @@ public class JdbcArtworkDao implements ArtworkDao {
             stmt.setString(1, title);
             stmt.executeUpdate();
             
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error deleting artwork: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteById(int artworkId) {
+        String sql = "DELETE FROM Artwork WHERE IdArtwork = ?";
+
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, artworkId);
+            stmt.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Error deleting artwork: " + e.getMessage());
@@ -130,6 +144,7 @@ public class JdbcArtworkDao implements ArtworkDao {
      */
     private Artwork mapResultSetToArtwork(ResultSet rs) throws SQLException {
         Artwork artwork = new Artwork();
+        artwork.setId(rs.getInt("IdArtwork"));
         artwork.setTitle(rs.getString("Title"));
         artwork.setCreationYear(null); // Not stored in DB
         artwork.setType(rs.getString("Type"));

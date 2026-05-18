@@ -41,7 +41,7 @@ SELECT
     'Workshop' AS EventType,
     w.Title AS EventName,
     w.Date_ AS EventDate,
-    CONCAT(g.City ,' ', g.StreetName) AS Location,
+    a.City AS Location,
     CONCAT('Level: ', w.Level) AS RequiredLevel,
     w.Price AS Price
 FROM Workshop w
@@ -72,7 +72,7 @@ SELECT
     w.Date_ AS EventDate,
     a.Name AS Instructor
 FROM CommunityMember m
-JOIN RegisterWorkshop rw ON m.IdMember = rw.IdMember
+JOIN Registerworkshop rw ON m.IdMember = rw.IdMember
 JOIN Workshop w ON rw.IdWorkshop = w.IdWorkshop
 JOIN Artist a ON w.IdArtist = a.IdArtist
 ORDER BY EventDate DESC;
@@ -93,12 +93,19 @@ WHERE aw.Status = 'FOR_SALE';
 -- 1. Montre les emails et le nombre total d'inscriptions de chaque membre
 CREATE OR REPLACE VIEW view_admin_members AS
 SELECT cm.IdMember, cm.Name, cm.Email, cm.City,
-       COUNT(rw.IdWorkshop) AS NbWorkshops,
-       COUNT(re.IdExhibition) AS NbExhibitions
+       COALESCE(rw.NbWorkshops, 0) AS NbWorkshops,
+       COALESCE(re.NbExhibitions, 0) AS NbExhibitions
 FROM CommunityMember cm
-LEFT JOIN Registerworkshop rw ON cm.IdMember = rw.IdMember
-LEFT JOIN RegisterExhibition re ON cm.IdMember = re.IdMember
-GROUP BY cm.IdMember, cm.Name, cm.Email, cm.City;
+LEFT JOIN (
+    SELECT IdMember, COUNT(*) AS NbWorkshops
+    FROM Registerworkshop
+    GROUP BY IdMember
+) rw ON cm.IdMember = rw.IdMember
+LEFT JOIN (
+    SELECT IdMember, COUNT(*) AS NbExhibitions
+    FROM RegisterExhibition
+    GROUP BY IdMember
+) re ON cm.IdMember = re.IdMember;
 
 -- 2. Tableau de bord global par artiste (Œuvres, Workshops, Participants totaux).
 CREATE OR REPLACE VIEW view_activity_summary AS
