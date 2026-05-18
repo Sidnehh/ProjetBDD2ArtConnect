@@ -127,6 +127,7 @@ public class GalleryController {
                 return;
             }
             if (!name.isEmpty()) selectedGallery.setName(name);
+            selectedGallery.setStreetName(street);
             selectedGallery.setCity(city);
             selectedGallery.setRating(rating);
 
