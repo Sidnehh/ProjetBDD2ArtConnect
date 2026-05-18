@@ -134,12 +134,13 @@ public class GalleryController {
             try {
                 galleryService.updateGallery(selectedGallery);
             } catch (SQLException e) {
-            String errorMsg = e.getMessage();
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("A trigger has blocked the insertion!");
-            alert.setContentText(errorMsg); 
-            alert.showAndWait();
+                String errorMsg = e.getMessage();
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Database Error");
+                alert.setHeaderText("Update Failed");
+                alert.setContentText(errorMsg); 
+                alert.showAndWait();
+                return;
             }
 
             showAlert("Success", "Gallery '" + selectedGallery.getName() + "' updated successfully!");
@@ -165,15 +166,14 @@ public class GalleryController {
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
                 galleryService.deleteGallery(selectedGallery.getName());
+                showAlert("Success", "Gallery '" + selectedGallery.getName() + "' deleted successfully!");
+                refreshTable();
+                clearEditFields();
+                RegistrationController.refreshSelectorsIfOpen();
             } catch (RuntimeException re) {
                 showAlert("Error", "Failed to delete gallery: " + re.getMessage());
                 return;
             }
-            showAlert("Success", "Gallery '" + selectedGallery.getName() + "' deleted successfully!");
-            refreshTable();
-            clearEditFields();
-
-            RegistrationController.refreshSelectorsIfOpen();
         }
     }
 

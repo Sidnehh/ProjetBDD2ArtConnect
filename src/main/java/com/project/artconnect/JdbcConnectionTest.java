@@ -12,14 +12,14 @@ public class JdbcConnectionTest {
         try {
             Connection conn = ConnectionManager.getConnection();
             if (conn != null) {
-                System.out.println("✓ JDBC Connection successful!");
+                System.out.println("JDBC Connection successful!");
                 System.out.println("Database connection metadata:");
                 System.out.println("  - Database: " + conn.getMetaData().getDatabaseProductName());
                 System.out.println("  - Version: " + conn.getMetaData().getDatabaseProductVersion());
                 conn.close();
             }
         } catch (SQLException e) {
-            System.out.println("✗ JDBC Connection failed!");
+            System.out.println("JDBC Connection failed!");
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
             System.out.println("\nCheck your DatabaseConfig.java:");

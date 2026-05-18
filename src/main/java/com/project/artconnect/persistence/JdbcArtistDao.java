@@ -85,10 +85,9 @@ public class JdbcArtistDao implements ArtistDao {
         
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setString(1, artistName);
-            stmt.executeUpdate();
-             }
+                stmt.setString(1, artistName);
+                stmt.executeUpdate();
+            }
     }
 
     @Override

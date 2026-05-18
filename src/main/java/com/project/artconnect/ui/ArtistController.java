@@ -163,14 +163,23 @@ public class ArtistController {
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
                 artistService.deleteArtist(selectedArtist.getName());
+                showAlert("Success", "Artist '" + selectedArtist.getName() + "' deleted successfully!");
+                refreshTable();
+                clearEditFields();
+                ArtworkController.refreshArtistSelectorsIfOpen();
+                WorkshopController.refreshArtistSelectorsIfOpen();
             } catch (SQLException e) {
-            String errorMsg = e.getMessage();
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("A trigger has blocked the insertion!");
-            alert.setContentText(errorMsg); 
-            alert.showAndWait();
-        }
+                String errorMsg = e.getMessage();
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Cannot Delete Artist");
+                alert.setHeaderText("Deletion Blocked");
+                if (errorMsg != null && errorMsg.toLowerCase().contains("oeuvre")) {
+                    alert.setContentText("This artist cannot be deleted because they have artworks in the database.\n\nDelete or change the status of their artworks first.");
+                } else {
+                    alert.setContentText("Database error: " + errorMsg);
+                }
+                alert.showAndWait();
+            }
         }
     }
 

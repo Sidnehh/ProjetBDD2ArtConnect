@@ -216,7 +216,7 @@ public class ArtworkController {
             String errorMsg = e.getMessage();
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Database Error");
-            alert.setHeaderText("A trigger has blocked the insertion!");
+            alert.setHeaderText("Update Failed");
             alert.setContentText(errorMsg); 
             alert.showAndWait();
         }
@@ -233,10 +233,15 @@ public class ArtworkController {
         confirm.setTitle("Confirm Delete");
         confirm.setContentText("Are you sure you want to delete '" + selectedArtwork.getTitle() + "'?");
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-            artworkService.deleteArtwork(selectedArtwork.getTitle());
-            showAlert("Success", "Artwork '" + selectedArtwork.getTitle() + "' deleted successfully!");
-            refreshTable();
-            clearEditFields();
+            try {
+                artworkService.deleteArtwork(selectedArtwork.getTitle());
+                showAlert("Success", "Artwork '" + selectedArtwork.getTitle() + "' deleted successfully!");
+                refreshTable();
+                clearEditFields();
+            } catch (RuntimeException re) {
+                showAlert("Error", "Failed to delete artwork: " + re.getMessage());
+                return;
+            }
         }
     }
 

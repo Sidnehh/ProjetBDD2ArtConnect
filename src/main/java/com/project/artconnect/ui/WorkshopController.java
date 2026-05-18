@@ -198,7 +198,7 @@ public class WorkshopController {
             String errorMsg = e.getMessage();
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Database Error");
-            alert.setHeaderText("A trigger has blocked the insertion!");
+            alert.setHeaderText("Update Failed");
             alert.setContentText(errorMsg); 
             alert.showAndWait();
         }
@@ -217,15 +217,15 @@ public class WorkshopController {
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
                 workshopService.delete(selectedWorkshop.getTitle());
+                showAlert("Success", "Workshop '" + selectedWorkshop.getTitle() + "' deleted successfully!");
+                refreshTable();
+                clearEditFields();
+                RegistrationController.refreshSelectorsIfOpen();
+                DiscoverController.refreshFeaturedIfOpen();
             } catch (RuntimeException re) {
                 showAlert("Error", "Failed to delete workshop: " + re.getMessage());
                 return;
             }
-            showAlert("Success", "Workshop '" + selectedWorkshop.getTitle() + "' deleted successfully!");
-            refreshTable();
-            clearEditFields();
-            RegistrationController.refreshSelectorsIfOpen();
-            DiscoverController.refreshFeaturedIfOpen();
         }
     }
 
