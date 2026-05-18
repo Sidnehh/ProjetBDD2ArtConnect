@@ -41,7 +41,7 @@
                 <Label text="Status:" prefWidth="100" />
                 <ComboBox fx:id="newArtworkStatus" prefWidth="200" />
             </HBox>
-            <Button text="Add Artwork" onAction="#handleAddArtwork" style="-fx-font-size: 12; -fx-padding: 8;" />
+            <Button text="Add Artwork" onAction="#handleAddArtwork" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #4caf50;" />
         </VBox>
     </TitledPane>
 
@@ -70,7 +70,7 @@
                 <ComboBox fx:id="editArtworkStatus" prefWidth="200" />
             </HBox>
             <HBox spacing="10.0">
-                <Button text="Update Artwork" onAction="#handleUpdateArtwork" style="-fx-font-size: 12; -fx-padding: 8;" />
+                <Button text="Update Artwork" onAction="#handleUpdateArtwork" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #2196f3;" />
                 <Button text="Delete Artwork" onAction="#handleDeleteArtwork" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #f44336;" />
             </HBox>
         </VBox>

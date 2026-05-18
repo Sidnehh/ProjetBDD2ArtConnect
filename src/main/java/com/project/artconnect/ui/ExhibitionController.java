@@ -105,6 +105,7 @@ public class ExhibitionController {
         if (RegistrationController.getInstance() != null) {
             RegistrationController.getInstance().reloadSelectors();
         }
+        DiscoverController.refreshFeaturedIfOpen();
     }
 
     @FXML
@@ -161,6 +162,7 @@ public class ExhibitionController {
         refreshData();
         clearEditFields();
         RegistrationController.refreshSelectorsIfOpen();
+        DiscoverController.refreshFeaturedIfOpen();
     }
 
     @FXML
@@ -184,6 +186,7 @@ public class ExhibitionController {
             refreshData();
             clearEditFields();
             RegistrationController.refreshSelectorsIfOpen();
+            DiscoverController.refreshFeaturedIfOpen();
         }
     }
 

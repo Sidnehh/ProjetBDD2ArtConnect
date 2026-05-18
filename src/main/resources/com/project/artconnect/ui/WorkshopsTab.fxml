@@ -44,7 +44,7 @@
                 <Label text="Level:" prefWidth="100" />
                 <ComboBox fx:id="newWorkshopLevel" prefWidth="200" />
             </HBox>
-            <Button text="Add Workshop" onAction="#handleAddWorkshop" style="-fx-font-size: 12; -fx-padding: 8;" />
+            <Button text="Add Workshop" onAction="#handleAddWorkshop" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #4caf50;" />
         </VBox>
     </TitledPane>
 
@@ -77,7 +77,7 @@
                 <ComboBox fx:id="editWorkshopLevel" prefWidth="200" />
             </HBox>
             <HBox spacing="10.0">
-                <Button text="Update Workshop" onAction="#handleUpdateWorkshop" style="-fx-font-size: 12; -fx-padding: 8;" />
+                <Button text="Update Workshop" onAction="#handleUpdateWorkshop" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #2196f3;" />
                 <Button text="Delete Workshop" onAction="#handleDeleteWorkshop" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #f44336;" />
             </HBox>
         </VBox>

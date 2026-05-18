@@ -40,7 +40,7 @@
                 <Label text="Birth Year:" prefWidth="80" />
                 <TextField fx:id="newArtistYear" promptText="Year (e.g. 1980)" HBox.hgrow="ALWAYS" />
             </HBox>
-            <Button text="Add Artist" onAction="#handleAddArtist" style="-fx-font-size: 12; -fx-padding: 8;" />
+            <Button text="Add Artist" onAction="#handleAddArtist" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #4caf50;" />
         </VBox>
     </TitledPane>
 
@@ -65,7 +65,7 @@
                 <TextField fx:id="editArtistYear" promptText="Year" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox spacing="10.0">
-                <Button text="Update Artist" onAction="#handleUpdateArtist" style="-fx-font-size: 12; -fx-padding: 8;" />
+                <Button text="Update Artist" onAction="#handleUpdateArtist" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #2196f3;" />
                 <Button text="Delete Artist" onAction="#handleDeleteArtist" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #f44336;" />
             </HBox>
         </VBox>

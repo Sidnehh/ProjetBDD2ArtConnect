@@ -142,6 +142,7 @@ public class WorkshopController {
             if (RegistrationController.getInstance() != null) {
                 RegistrationController.getInstance().reloadSelectors();
             }
+            DiscoverController.refreshFeaturedIfOpen();
         } catch (SQLException e) {
             String errorMsg = e.getMessage();
             Alert alert = new Alert(AlertType.ERROR);
@@ -192,6 +193,7 @@ public class WorkshopController {
             refreshTable();
             clearEditFields();
             RegistrationController.refreshSelectorsIfOpen();
+            DiscoverController.refreshFeaturedIfOpen();
         } catch (SQLException e) {
             String errorMsg = e.getMessage();
             Alert alert = new Alert(AlertType.ERROR);
@@ -223,6 +225,7 @@ public class WorkshopController {
             refreshTable();
             clearEditFields();
             RegistrationController.refreshSelectorsIfOpen();
+            DiscoverController.refreshFeaturedIfOpen();
         }
     }
 

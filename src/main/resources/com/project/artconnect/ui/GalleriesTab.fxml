@@ -36,7 +36,7 @@
                 <Label text="Rating:" prefWidth="100" />
                 <TextField fx:id="newGalleryRating" promptText="Rating" HBox.hgrow="ALWAYS" />
             </HBox>
-            <Button text="Add Gallery" onAction="#handleAddGallery" style="-fx-font-size: 12; -fx-padding: 8;" />
+            <Button text="Add Gallery" onAction="#handleAddGallery" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #4caf50;" />
         </VBox>
     </TitledPane>
 
@@ -61,7 +61,7 @@
                 <TextField fx:id="editGalleryRating" promptText="Rating" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox spacing="10.0">
-                <Button text="Update Gallery" onAction="#handleUpdateGallery" style="-fx-font-size: 12; -fx-padding: 8;" />
+                <Button text="Update Gallery" onAction="#handleUpdateGallery" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #2196f3;" />
                 <Button text="Delete Gallery" onAction="#handleDeleteGallery" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #f44336;" />
             </HBox>
         </VBox>

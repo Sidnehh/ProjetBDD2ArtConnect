@@ -32,7 +32,7 @@
                 <Label text="City:" prefWidth="100" />
                 <TextField fx:id="newMemberCity" promptText="City" HBox.hgrow="ALWAYS" />
             </HBox>
-            <Button text="Add Member" onAction="#handleAddMember" style="-fx-font-size: 12; -fx-padding: 8;" />
+            <Button text="Add Member" onAction="#handleAddMember" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #4caf50;" />
         </VBox>
     </TitledPane>
 
@@ -53,7 +53,7 @@
                 <TextField fx:id="editMemberCity" promptText="City" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox spacing="10.0">
-                <Button text="Update Member" onAction="#handleUpdateMember" style="-fx-font-size: 12; -fx-padding: 8;" />
+                <Button text="Update Member" onAction="#handleUpdateMember" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #2196f3;" />
                 <Button text="Delete Member" onAction="#handleDeleteMember" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #f44336;" />
             </HBox>
         </VBox>

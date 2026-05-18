@@ -36,7 +36,7 @@
                 <Label text="Gallery:" prefWidth="100" />
                 <ComboBox fx:id="newExhibitionGallery" prefWidth="200" HBox.hgrow="ALWAYS" />
             </HBox>
-            <Button text="Add Exhibition" onAction="#handleAddExhibition" style="-fx-font-size: 12; -fx-padding: 8;" />
+            <Button text="Add Exhibition" onAction="#handleAddExhibition" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #4caf50;" />
         </VBox>
     </TitledPane>
 
@@ -61,7 +61,7 @@
                 <ComboBox fx:id="editExhibitionGallery" prefWidth="200" HBox.hgrow="ALWAYS" />
             </HBox>
             <HBox spacing="10.0">
-                <Button text="Update Exhibition" onAction="#handleUpdateExhibition" style="-fx-font-size: 12; -fx-padding: 8;" />
+                <Button text="Update Exhibition" onAction="#handleUpdateExhibition" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #2196f3;" />
                 <Button text="Delete Exhibition" onAction="#handleDeleteExhibition" style="-fx-font-size: 12; -fx-padding: 8; -fx-text-fill: white; -fx-background-color: #f44336;" />
             </HBox>
         </VBox>

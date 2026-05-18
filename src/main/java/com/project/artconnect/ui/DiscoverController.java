@@ -19,6 +19,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class DiscoverController {
+    private static DiscoverController instance;
+
+    public static void refreshFeaturedIfOpen() {
+        if (instance != null) {
+            instance.refreshFeaturedContent();
+        }
+    }
+
     @FXML
     private FlowPane discoverPane;
 
@@ -28,6 +36,11 @@ public class DiscoverController {
 
     @FXML
     public void initialize() {
+        instance = this;
+        refreshFeaturedContent();
+    }
+
+    private void refreshFeaturedContent() {
         discoverPane.getChildren().clear();
 
         List<Exhibition> upcomingExhibitions = exhibitionService.getAllExhibitions().stream()
