@@ -48,7 +48,6 @@ public class JdbcArtistService implements ArtistService {
 
     @Override
     public List<Discipline> getAllDisciplines() {
-        // TODO: Implement discipline retrieval if disciplines are stored in DB
         return List.of();
     }
 

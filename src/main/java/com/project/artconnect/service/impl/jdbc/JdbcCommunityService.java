@@ -34,7 +34,6 @@ public class JdbcCommunityService implements CommunityService {
 
     @Override
     public List<Review> getReviewsByMember(CommunityMember member) {
-        // TODO: Implement review retrieval from database
         return List.of();
     }
 

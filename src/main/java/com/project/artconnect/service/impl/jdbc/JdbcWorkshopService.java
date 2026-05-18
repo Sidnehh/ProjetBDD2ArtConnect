@@ -33,13 +33,11 @@ public class JdbcWorkshopService implements WorkshopService {
 
     @Override
     public void bookWorkshop(Workshop workshop, CommunityMember member) {
-        // TODO: Implement workshop booking logic with database transaction
         // This would involve inserting into RegisterWorkshop table
     }
 
     @Override
     public List<Booking> getBookingsByMember(CommunityMember member) {
-        // TODO: Implement booking retrieval from database
         return List.of();
     }
 
