@@ -4,6 +4,8 @@ import com.project.artconnect.dao.ArtistDao;
 import com.project.artconnect.model.Artist;
 import com.project.artconnect.model.Discipline;
 import com.project.artconnect.service.ArtistService;
+
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,7 +44,7 @@ public class JdbcArtistService implements ArtistService {
     }
 
     @Override
-    public void deleteArtist(String name) {
+    public void deleteArtist(String name) throws SQLException{
         artistDao.delete(name);
     }
 

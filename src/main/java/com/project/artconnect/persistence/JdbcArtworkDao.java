@@ -46,7 +46,7 @@ public class JdbcArtworkDao implements ArtworkDao {
     }
 
     @Override
-    public void save(Artwork artwork) {
+    public void save(Artwork artwork) throws SQLException{
         String sql = "INSERT INTO Artwork (IdArtwork, Title, Price, Status, Type, IdArtist) VALUES (?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = ConnectionManager.getConnection();
@@ -63,14 +63,11 @@ public class JdbcArtworkDao implements ArtworkDao {
             
             stmt.executeUpdate();
             
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error saving artwork: " + e.getMessage());
         }
     }
 
     @Override
-    public void update(Artwork artwork) {
+    public void update(Artwork artwork) throws SQLException{
         String sql = "UPDATE Artwork SET Price = ?, Status = ?, Type = ?, IdArtist = ? WHERE Title = ?";
         
         try (Connection conn = ConnectionManager.getConnection();
@@ -82,12 +79,8 @@ public class JdbcArtworkDao implements ArtworkDao {
             stmt.setInt(4, artwork.getArtist() != null ? artwork.getArtist().getIdArtist() : 0);
             stmt.setString(5, artwork.getTitle());
             
-            stmt.executeUpdate();
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error updating artwork: " + e.getMessage());
-        }
+            stmt.executeUpdate(); 
+        } 
     }
 
     @Override

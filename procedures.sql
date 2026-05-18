@@ -41,7 +41,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- 1. Inscrire un membre à une exposition (Correct)
+-- 2. Inscrire un membre à une exposition (Correct)
 -- Aucune modification majeure nécessaire, la logique est saine.
 DROP PROCEDURE IF EXISTS sp_Register_Member_To_Exhibition;
 DELIMITER //
@@ -153,9 +153,44 @@ BEGIN
 END//
 DELIMITER ;
 
+-- 5. Procédure de validation de prix 
+DROP PROCEDURE IF EXISTS validate_price;
+DELIMITER //
+CREATE PROCEDURE validate_price(IN new_price DECIMAL(10,2))
+BEGIN
+    IF new_price <= 0 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Erreur : Prix invalide. Le prix doit être supérieur à 0';
+    END IF;
+END//
+DELIMITER ;
+
+-- 5. Procédure de validation de prix 
+DROP PROCEDURE IF EXISTS validate_price;
+DELIMITER //
+CREATE PROCEDURE validate_price(IN new_price DECIMAL(10,2))
+BEGIN
+    IF new_price <= 0 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Erreur : Prix invalide. Le prix doit être supérieur à 0';
+    END IF;
+END//
+DELIMITER ;
+
+-- -. Procédure de validation de note
+DROP PROCEDURE IF EXISTS validate_rating;
+DELIMITER //
+CREATE PROCEDURE validate_rating(IN new_rating DECIMAL(10,2))
+BEGIN
+    IF new_rating NOT BETWEEN 0 AND 5 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Erreur : Rating invalide. Un rating valide est compris entre 0 et 5.';
+    END IF;
+END//
+DELIMITER ;
+
 -- -------------------------------------------------------------------------------------
 -- II - FONCTIONS (Programmes Stockés)
-
 -- 1. Retourner le nombre exact de participants inscrits à une exposition (Correct)
 DROP FUNCTION IF EXISTS fn_Count_Exhibition_Participants;
 DELIMITER //

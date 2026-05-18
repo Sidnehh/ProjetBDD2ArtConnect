@@ -11,9 +11,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
 import java.time.LocalDateTime;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -140,10 +142,13 @@ public class WorkshopController {
             if (RegistrationController.getInstance() != null) {
                 RegistrationController.getInstance().reloadSelectors();
             }
-        } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Price must be a valid number.");
-        } catch (DateTimeParseException e) {
-            showAlert("Validation Error", "Time must be in HH:mm format.");
+        } catch (SQLException e) {
+            String errorMsg = e.getMessage();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Database Error");
+            alert.setHeaderText("A trigger has blocked the insertion!");
+            alert.setContentText(errorMsg); 
+            alert.showAndWait();
         }
     }
 
@@ -187,10 +192,13 @@ public class WorkshopController {
             refreshTable();
             clearEditFields();
             RegistrationController.refreshSelectorsIfOpen();
-        } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Price must be a valid number.");
-        } catch (DateTimeParseException e) {
-            showAlert("Validation Error", "Time must be in HH:mm format.");
+        } catch (SQLException e) {
+            String errorMsg = e.getMessage();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Database Error");
+            alert.setHeaderText("A trigger has blocked the insertion!");
+            alert.setContentText(errorMsg); 
+            alert.showAndWait();
         }
     }
 

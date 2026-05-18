@@ -1,4 +1,4 @@
-
+USE artconnect;
 -- -------------------------------------------------------------------------------------------------------
 -- I - Déclencheurs d'intégrité de données
 
@@ -12,7 +12,7 @@ BEGIN
     SELECT COUNT(*) INTO nb_oeuvres FROM Artwork WHERE IdArtist = OLD.IdArtist AND Status = 'FOR_SALE';
     IF nb_oeuvres > 0 THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Erreur : Impossible de supprimer un artiste ayant des œuvres à vendre.';
+        SET MESSAGE_TEXT = 'Erreur : L''artiste a encore des oeuvres enregistrées.';
     END IF;
 END//
 DELIMITER ;
@@ -42,19 +42,33 @@ END//
 DELIMITER ;
 
 -- 3. Vérifier la note de Gallerie
-DROP TRIGGER IF EXISTS trg_Validate_Gallery_Rating;
-DELIMITER //
-CREATE TRIGGER trg_Validate_Gallery_Rating
-BEFORE INSERT ON Gallery
-FOR EACH ROW
-BEGIN
-	IF NEW.Rating NOT  BETWEEN 0 AND 5 THEN
-		SIGNAL SQLSTATE '45000'
-		SET MESSAGE_TEXT = 'Erreur : Rating invalide. Un rating valide est compris entre 0 et 5.';
-    END IF;
-END//
-DELIMITER ;
+DROP TRIGGER IF EXISTS trg_Validate_AddedGallery_Rating;
+CREATE TRIGGER trg_Validate_AddedGallery_Rating BEFORE INSERT ON gallery
+FOR EACH ROW CALL validate_rating(NEW.rating);
+-- Mise à jour
+DROP TRIGGER IF EXISTS trg_Validate_UpdatedGallery_Rating;
+CREATE TRIGGER trg_Validate_UpdatedGallery_Rating BEFORE UPDATE ON gallery
+FOR EACH ROW CALL validate_rating(NEW.rating);
 
+-- 4. Vérifier le prix d'une oeuvre
+-- Insertion
+DROP TRIGGER IF EXISTS trg_Check_AddedArtwork_Price;
+CREATE TRIGGER trg_Check_AddedArtwork_Price BEFORE INSERT ON artwork
+FOR EACH ROW CALL validate_price(NEW.price);
+-- Mise à jour
+DROP TRIGGER IF EXISTS trg_Check_UpdatedArtwork_Price;
+CREATE TRIGGER trg_Check_UpdatedArtwork_Price BEFORE UPDATE ON artwork
+FOR EACH ROW CALL validate_price(NEW.price);
+
+-- 5. Vérifier le prix d'un workshop
+-- Insertion
+DROP TRIGGER IF EXISTS trg_Check_AddedWorkshop_Price;
+CREATE TRIGGER trg_Check_AddedWorkshop_Price BEFORE INSERT ON workshop
+FOR EACH ROW CALL validate_price(NEW.price);
+-- Mise à jour
+DROP TRIGGER IF EXISTS trg_Check_UpdatedWorkshop_Price;
+CREATE TRIGGER trg_Check_UpdatedWorkshop_Price BEFORE UPDATE ON workshop
+FOR EACH ROW CALL validate_price(NEW.price);
 
 -- -------------------------------------------------------------------------------------------------------
 -- II - Déclencheurs de mise à jour automatique

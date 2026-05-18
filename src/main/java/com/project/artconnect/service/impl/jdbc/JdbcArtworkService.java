@@ -5,6 +5,8 @@ import com.project.artconnect.dao.ArtistDao;
 import com.project.artconnect.model.Artwork;
 import com.project.artconnect.model.Artist;
 import com.project.artconnect.service.ArtworkService;
+
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,12 +42,12 @@ public class JdbcArtworkService implements ArtworkService {
     }
 
     @Override
-    public void createArtwork(Artwork artwork) {
+    public void createArtwork(Artwork artwork) throws SQLException {
         artworkDao.save(artwork);
     }
 
     @Override
-    public void updateArtwork(Artwork artwork) {
+    public void updateArtwork(Artwork artwork) throws SQLException {
         artworkDao.update(artwork);
     }
 

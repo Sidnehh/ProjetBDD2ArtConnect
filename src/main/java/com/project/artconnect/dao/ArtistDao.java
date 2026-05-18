@@ -1,6 +1,8 @@
 package com.project.artconnect.dao;
 
 import com.project.artconnect.model.Artist;
+
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -13,7 +15,7 @@ public interface ArtistDao {
 
     void update(Artist artist);
 
-    void delete(String artistName);
+    void delete(String artistName) throws SQLException;
 
     List<Artist> findByCity(String city);
 }

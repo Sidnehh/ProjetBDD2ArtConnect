@@ -1,6 +1,9 @@
 package com.project.artconnect.ui;
 
 import com.project.artconnect.model.Artwork;
+
+import java.sql.SQLException;
+
 import com.project.artconnect.model.Artist;
 import com.project.artconnect.service.ArtworkService;
 import com.project.artconnect.service.ArtistService;
@@ -12,6 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -139,7 +143,7 @@ public class ArtworkController {
     }
 
     @FXML
-    private void handleAddArtwork() {
+    private void handleAddArtwork() throws SQLException {
         String title = newArtworkTitle.getText().trim();
         String type = newArtworkType.getValue();
         String priceStr = newArtworkPrice.getText().trim();
@@ -166,8 +170,14 @@ public class ArtworkController {
 
             showAlert("Success", "Artwork '" + title + "' added successfully!");
             refreshTable();
-        } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Price must be a valid number.");
+
+        } catch (SQLException e) {
+            String errorMsg = e.getMessage();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Database Error");
+            alert.setHeaderText("A trigger has blocked the insertion!");
+            alert.setContentText(errorMsg); 
+            alert.showAndWait();
         }
     }
 
@@ -201,8 +211,14 @@ public class ArtworkController {
             showAlert("Success", "Artwork '" + selectedArtwork.getTitle() + "' updated successfully!");
             refreshTable();
             clearEditFields();
-        } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Price must be a valid number.");
+            
+        } catch (SQLException e) {
+            String errorMsg = e.getMessage();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Database Error");
+            alert.setHeaderText("A trigger has blocked the insertion!");
+            alert.setContentText(errorMsg); 
+            alert.showAndWait();
         }
     }
 

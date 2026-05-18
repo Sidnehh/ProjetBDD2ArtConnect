@@ -73,7 +73,7 @@ public class JdbcWorkshopDao implements WorkshopDao {
     }
 
     @Override
-    public void save(Workshop workshop) {
+    public void save(Workshop workshop) throws SQLException{
         String sql = "INSERT INTO Workshop (IdWorkshop, Title, Date_, Price, Level, IdArtist) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionManager.getConnection();
@@ -88,15 +88,11 @@ public class JdbcWorkshopDao implements WorkshopDao {
             stmt.setInt(6, workshop.getInstructor() != null ? workshop.getInstructor().getIdArtist() : 0);
 
             stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error saving workshop: " + e.getMessage());
-        }
+            }
     }
 
     @Override
-    public void update(Workshop workshop) {
+    public void update(Workshop workshop) throws SQLException{
         String sql = "UPDATE Workshop SET Title = ?, Date_ = ?, Price = ?, Level = ?, IdArtist = ? WHERE IdWorkshop = ?";
 
         try (Connection conn = ConnectionManager.getConnection();
@@ -110,10 +106,6 @@ public class JdbcWorkshopDao implements WorkshopDao {
             stmt.setInt(6, workshop.getId());
 
             stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error updating workshop: " + e.getMessage());
         }
     }
 

@@ -1,5 +1,7 @@
 package com.project.artconnect.ui;
 
+import java.sql.SQLException;
+
 import com.project.artconnect.model.Artist;
 import com.project.artconnect.model.Discipline;
 import com.project.artconnect.service.ArtistService;
@@ -9,6 +11,7 @@ import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
 
@@ -160,15 +163,14 @@ public class ArtistController {
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
                 artistService.deleteArtist(selectedArtist.getName());
-            } catch (RuntimeException re) {
-                showAlert("Error", "Failed to delete artist: " + re.getMessage());
-                return;
-            }
-            showAlert("Success", "Artist '" + selectedArtist.getName() + "' deleted successfully!");
-            refreshTable();
-            clearEditFields();
-            ArtworkController.refreshArtistSelectorsIfOpen();
-            WorkshopController.refreshArtistSelectorsIfOpen();
+            } catch (SQLException e) {
+            String errorMsg = e.getMessage();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Database Error");
+            alert.setHeaderText("A trigger has blocked the insertion!");
+            alert.setContentText(errorMsg); 
+            alert.showAndWait();
+        }
         }
     }
 

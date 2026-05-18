@@ -5,6 +5,9 @@ import com.project.artconnect.dao.ExhibitionDao;
 import com.project.artconnect.model.Gallery;
 import com.project.artconnect.model.Exhibition;
 import com.project.artconnect.service.GalleryService;
+
+import java.sql.SQLClientInfoException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,12 +46,12 @@ public class JdbcGalleryService implements GalleryService {
     }
 
     @Override
-    public void createGallery(Gallery gallery) {
+    public void createGallery(Gallery gallery) throws SQLException{
         galleryDao.save(gallery);
     }
 
     @Override
-    public void updateGallery(Gallery gallery) {
+    public void updateGallery(Gallery gallery) throws SQLException{
         galleryDao.update(gallery);
     }
 

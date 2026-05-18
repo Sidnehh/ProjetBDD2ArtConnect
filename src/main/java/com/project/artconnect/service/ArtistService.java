@@ -2,6 +2,8 @@ package com.project.artconnect.service;
 
 import com.project.artconnect.model.Artist;
 import com.project.artconnect.model.Discipline;
+
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +16,7 @@ public interface ArtistService {
 
     void updateArtist(Artist artist);
 
-    void deleteArtist(String name);
+    void deleteArtist(String name) throws SQLException;
 
     List<Discipline> getAllDisciplines();
 

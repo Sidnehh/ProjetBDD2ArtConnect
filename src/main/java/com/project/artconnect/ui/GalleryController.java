@@ -9,8 +9,11 @@ import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
+
+import java.sql.SQLException;
 import java.util.List;
 
 public class GalleryController {
@@ -77,10 +80,6 @@ public class GalleryController {
 
         try {
             double rating = Double.parseDouble(ratingStr);
-            if (rating < 0.0 || rating > 5.0) {
-                showAlert("Validation Error", "Rating must be between 0 and 5.");
-                return;
-            }
             Gallery g = new Gallery(name, street, city, rating);
             try {
                 galleryService.createGallery(g);
@@ -88,7 +87,6 @@ public class GalleryController {
                 showAlert("Error", "Failed to add gallery: " + re.getMessage());
                 return;
             }
-
             newGalleryName.clear();
             newGalleryStreet.clear();
             newGalleryCity.clear();
@@ -100,8 +98,13 @@ public class GalleryController {
             if (RegistrationController.getInstance() != null) {
                 RegistrationController.getInstance().reloadSelectors();
             }
-        } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Rating must be a valid number.");
+        } catch (SQLException e) {
+            String errorMsg = e.getMessage();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Database Error");
+            alert.setHeaderText("A trigger has blocked the insertion!");
+            alert.setContentText(errorMsg); 
+            alert.showAndWait();
         }
     }
 
@@ -130,9 +133,13 @@ public class GalleryController {
 
             try {
                 galleryService.updateGallery(selectedGallery);
-            } catch (RuntimeException re) {
-                showAlert("Error", "Failed to update gallery: " + re.getMessage());
-                return;
+            } catch (SQLException e) {
+            String errorMsg = e.getMessage();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Database Error");
+            alert.setHeaderText("A trigger has blocked the insertion!");
+            alert.setContentText(errorMsg); 
+            alert.showAndWait();
             }
 
             showAlert("Success", "Gallery '" + selectedGallery.getName() + "' updated successfully!");

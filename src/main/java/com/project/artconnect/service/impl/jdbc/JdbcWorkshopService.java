@@ -5,6 +5,8 @@ import com.project.artconnect.model.Workshop;
 import com.project.artconnect.model.Booking;
 import com.project.artconnect.model.CommunityMember;
 import com.project.artconnect.service.WorkshopService;
+
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,12 +44,12 @@ public class JdbcWorkshopService implements WorkshopService {
     }
 
     @Override
-    public void save(Workshop workshop) {
+    public void save(Workshop workshop) throws SQLException{
         workshopDao.save(workshop);
     }
 
     @Override
-    public void update(Workshop workshop) {
+    public void update(Workshop workshop) throws SQLException {
         workshopDao.update(workshop);
     }
 

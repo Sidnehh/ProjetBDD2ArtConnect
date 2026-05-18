@@ -80,7 +80,7 @@ public class JdbcArtistDao implements ArtistDao {
     }
 
     @Override
-    public void delete(String artistName) {
+    public void delete(String artistName) throws SQLException{
         String sql = "DELETE FROM Artist WHERE Name = ?";
         
         try (Connection conn = ConnectionManager.getConnection();
@@ -88,11 +88,7 @@ public class JdbcArtistDao implements ArtistDao {
             
             stmt.setString(1, artistName);
             stmt.executeUpdate();
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error deleting artist: " + e.getMessage());
-        }
+             }
     }
 
     @Override
